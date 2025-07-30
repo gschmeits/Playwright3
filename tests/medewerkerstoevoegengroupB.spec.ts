@@ -82,7 +82,11 @@ try {
 
 			await basisgegevensPage.Doorgaan()
 
-			await page.waitForTimeout(500)
+			// Matches negeren
+
+
+			
+			await page.waitForTimeout(5000)
 
 			// await functiegegevensPage.Doorvoeren()
 

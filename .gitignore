@@ -15,5 +15,6 @@ ToevoegenMedewerkersSuccessFactors4.xlsx
 /test-results
 /test-data
 .github
+.idea
 /old_scripts
 readjsonl.ts
