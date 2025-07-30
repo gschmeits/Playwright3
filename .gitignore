@@ -1,0 +1,19 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/allure-report
+/allure-results
+.env
+auth.json
+results.xml
+test-results.json
+ToevoegenMedewerkersSuccessFactors4.xlsx
+/test-results
+/test-data
+.github
+/old_scripts
+readjsonl.ts
