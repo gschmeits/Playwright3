@@ -174,3 +174,16 @@ export function titelNaam(teller: number, voornaam: string, achternaam: string, 
     let group = groep.replace(' ', '_')
     return teller2 + '_' + voornaam + '_' + achternaam + '_' + group
 }
+
+export function datum(days: number=0, months:number=0, years:number=0):string {
+	// Datum van vandaag
+	const date = new Date()
+    date.setDate(date.getDate() + days)
+    date.setMonth(date.getMonth() + months)
+    date.setFullYear(date.getFullYear() + years)
+	var dd = String(date.getDate()).padStart(2, '0');
+	var mm = String(date.getMonth()+ 1).padStart(2, '0');
+	var yyyy = date.getFullYear()
+	var newDate = dd + mm + yyyy;
+    return newDate
+}

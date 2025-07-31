@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { LoginPage } from './pages/loginPage';
 import { BasisgegevensPage } from './pages/basisgegevensPage';
-import { titelNaam } from "./pages/basePage";
+import { titelNaam, datum } from "./pages/basePage";
 import { PersoonlijkegegevensPage } from './pages/persoonlijkegegevensPage';
 import { FunctiegegevensPage } from './pages/functiegegevensPage';
 import { DoorvoerPage } from './pages/doorvoerPage';
@@ -12,32 +12,6 @@ try {
 
 	// Wijs de data toe aan variabele 'personsList' met als functiegegevens_medewerkersgroeps = "Bezoldigd personeel (A)"
 	const personsList = personsData.filter((item: { functiegegevens__medewerkersgroep: string; }) => item.functiegegevens__medewerkersgroep === "Bezoldigd personeel (A)");
-
-	// Datum van vandaag
-	const today = new Date()
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0');
-	var yyyy = today.getFullYear();
-	var todayDate = dd + mm + yyyy;
-
-	// Einddatum contract
-	const date = new Date()
-	var dd = String(date.getDate()).padStart(2, '0');
-	var mm = String(date.getMonth() + 1).padStart(2, '0');
-	var yyyy = date.getFullYear() + 1;
-	var newDate = dd + mm + yyyy;
-
-	// Uitgiftedatum identiteitsbewijs
-	var dd = String(today.getDate() + 1).padStart(2, '0');
-	var mm = String(today.getMonth() + 3).padStart(2, '0');
-	var yyyy = today.getFullYear() - 2;
-	var uitgiftedatum = dd + mm + yyyy;
-
-	// Vervaldatum identiteitsbewijs
-	var dd = String(today.getDate() + 1).padStart(2, '0');
-	var mm = String(today.getMonth() + 3).padStart(2, '0');
-	var yyyy = today.getFullYear() + 8;
-	var vervaldatum = dd + mm + yyyy;
 
 	// Acties voordat de gegevens toegevoegd worden
 	test.beforeEach('test', async ({ page }) => {
@@ -122,7 +96,7 @@ try {
 					personsList[teller]['functiegegevens__contractsoort'],
 					personsList[teller]['functiegegevens__medewerkersgroep'],
 					personsList[teller]['functiegegevens__medewerkerssubgroep'],
-					newDate,
+					datum(0, 0, 1),
 					personsList[teller]['functiegegevens__basis_werkuren_per_week'],
 					personsList[teller]['functiegegevens__werkdagen_per_week'],
 					personsList[teller]['functiegegevens__FTE'],
@@ -139,9 +113,9 @@ try {
 					personsList[teller]['werkvergunning__land'],
 					personsList[teller]['werkvergunning__documenttype'],
 					personsList[teller]['werkvergunning__documentnummer'],
-					uitgiftedatum,
+					datum(1, 2, -2),
 					personsList[teller]['werkvergunning__uitgevende_instantie'],
-					vervaldatum
+					datum(1, 2, 8)
 				)
 
 				await functiegegevensPage.Doorgaan()

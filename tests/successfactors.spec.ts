@@ -16,7 +16,9 @@ try {
 	// Datum van vandaag
 	const today = new Date()
 	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0');	// Maandtelling begint bij 0, voor de huidige maand 
+															// dienen we dus 1 op te tellen,
+															// anders krijgen we de afgelopen maand
 	var yyyy = today.getFullYear();
 	var todayDate = dd + mm + yyyy;
 
@@ -24,7 +26,7 @@ try {
 	const date = new Date()
 	var dd = String(date.getDate()).padStart(2, '0');
 	var mm = String(date.getMonth() + 1).padStart(2, '0');
-	var yyyy = date.getFullYear() + 1;
+	var yyyy = date.getFullYear() + 1;						// Een jaar na de huidige datum
 	var newDate = dd + mm + yyyy;
 
 	// Uitgiftedatum identiteitsbewijs
