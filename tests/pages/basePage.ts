@@ -8,6 +8,33 @@ export default class BasePage {
         this.page = page;
     }
 
+    async gaNaarZoekTextBox(searchObject: string, medewerkersgroep:string='BEZOLDIGD PERSONEEL (A)') {
+        if (medewerkersgroep === 'BEZOLDIGD PERSONEEL (A)') {
+            searchObject = 'Nieuwe medewerker toevoegen'
+        }
+        // Vul de zoekbalk in
+        await this.page
+            .getByRole("textbox", { name: "De zoekresultaten van ‘" })
+            .click();
+        await this.page
+            .getByRole("textbox", { name: "De zoekresultaten van ‘" })
+            .fill(searchObject);
+    }
+
+    async searchBox(searchObject: string, medewerkersgroep: string = 'BEZOLDIGD PERSONEEL (A)', wachttijd: number = 1000) {
+        if (medewerkersgroep === 'BEZOLDIGD PERSONEEL (A)') {
+            searchObject = 'Nieuwe medewerker toevoegen'
+        }
+        await this.page.waitForTimeout(wachttijd)
+
+        await this.page.getByText(searchObject).first().click();
+
+        if (medewerkersgroep === 'Gastvrijheid ovk (B)') {
+            await this.page.locator('#__button2-BDI-content').click() // acties
+            await this.page.getByText('Gelijktijdige betrekking toevoegen').click()
+        }
+    }
+
     async Doorgaan() {
         // Druk op de knop Doorgaan
         await this.page.getByRole('button', { name: 'Doorgaan' }).click();
@@ -175,15 +202,15 @@ export function titelNaam(teller: number, voornaam: string, achternaam: string, 
     return teller2 + '_' + voornaam + '_' + achternaam + '_' + group
 }
 
-export function datum(days: number=0, months:number=0, years:number=0):string {
-	// Datum van vandaag
-	const date = new Date()
+export function datum(days: number = 0, months: number = 0, years: number = 0): string {
+    // Datum van vandaag
+    const date = new Date()
     date.setDate(date.getDate() + days)
     date.setMonth(date.getMonth() + months)
     date.setFullYear(date.getFullYear() + years)
-	var dd = String(date.getDate()).padStart(2, '0');
-	var mm = String(date.getMonth()+ 1).padStart(2, '0');
-	var yyyy = date.getFullYear()
-	var newDate = dd + mm + yyyy;
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0');
+    var yyyy = date.getFullYear()
+    var newDate = dd + mm + yyyy;
     return newDate
 }

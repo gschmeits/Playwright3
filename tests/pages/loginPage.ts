@@ -28,13 +28,5 @@ export class LoginPage extends BasePage {
 		await this.page.getByRole("textbox", { name: "Password" }).press("Enter");
 	}
 
-	async gaNaarZoekTextBox() {
-		// Vul de zoekbalk in
-		await this.page
-			.getByRole("textbox", { name: "De zoekresultaten van ‘" })
-			.click();
-		await this.page
-			.getByRole("textbox", { name: "De zoekresultaten van ‘" })
-			.fill("nieuwe medewerker toevoegen");
-	}
+
 }

@@ -18,7 +18,6 @@ export class PersoonlijkegegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen persoonlijke gegevens
 		// -------------------------------------------------
-
 		// Vul de initialen in
 		await this.page.getByRole('textbox', { name: 'Initialen (met punten' }).click();
 		await this.page.getByRole('textbox', { name: 'Initialen (met punten' }).fill(persoonlijke_gegevens__initialen);

@@ -12,14 +12,12 @@ export class BasisgegevensPage extends BasePage {
 		basisgegevens__bedrijf: string,
 		basisgegevens__gebeurtenisreden: string,
 		basisgegevens__sjabloon: string,
+		searchFor: string,
 		wachttijd: number = 1000
 	) {
 		// -------------------------------------------------
 		// Nieuwe medewerker toevoegen
 		// -------------------------------------------------
-
-		// Druk op optie voor het toevoegen van een nieuwe medewerker
-		await this.page.getByText("Nieuwe medewerker toevoegen").click();
 
 		//  Vul de datum in
 		await this.page

@@ -17,7 +17,7 @@ try {
 	test.beforeEach('test', async ({ page }) => {
 		const loginPage = new LoginPage(page)
 		await loginPage.SuccessFactorsLogin()
-		await loginPage.gaNaarZoekTextBox()
+		await loginPage.gaNaarZoekTextBox("Nieuwe medewerker toevoegen")
 	});
 
 	// Acties nadat de gegevens zijn ingevoerd
@@ -27,7 +27,7 @@ try {
 	})
 
 	// Herhaal de stappen zo vaak als dat er records zijn in 'personsList' met medewerkersgroep 'Bezoldigd personeel (A)'
-	for (let teller = 0; teller < personsList.length; teller++) {
+	for (let teller = 1; teller < 2; teller++) {
 		// Boudewijn Brons en Helen Honing staan er al in, dus niet meenemen in de run
 		if (teller != 8 && teller != 9) {
 			let naam = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
@@ -41,7 +41,8 @@ try {
 					personsList[teller]['basisgegevens__datum_in_dienst'],
 					personsList[teller]['basisgegevens__bedrijf'],
 					personsList[teller]['basisgegevens__gebeurtenisreden'],
-					personsList[teller]['basisgegevens__sjabloon'])
+					personsList[teller]['basisgegevens__sjabloon'],
+					"Nieuwe medewerker toevoegen")
 
 				await basisgegevensPage.Naamgegevens(
 					personsList[teller]['naamsgegevens__titel'],

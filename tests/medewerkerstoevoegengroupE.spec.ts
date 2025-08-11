@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { LoginPage } from './pages/loginPage';
 import { BasisgegevensPage } from './pages/basisgegevensPage';
-import { titelNaam } from "./pages/basePage";
+import { titelNaam, datum } from "./pages/basePage";
 import { PersoonlijkegegevensPage } from './pages/persoonlijkegegevensPage';
 import { FunctiegegevensPage } from './pages/functiegegevensPage';
 import { DoorvoerPage } from './pages/doorvoerPage';
@@ -13,37 +13,10 @@ try {
 	// Wijs de data toe aan variabele 'personsList' met als functiegegevens_medewerkersgroeps = "Extern bedrijf (E)"
 	const personsList = personsData.filter((item: { functiegegevens__medewerkersgroep: string; }) => item.functiegegevens__medewerkersgroep === "Extern bedrijf (E)");
 
-	// Datum van vandaag
-	const today = new Date()
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0');
-	var yyyy = today.getFullYear();
-	var todayDate = dd + mm + yyyy;
-
-	// Einddatum contract
-	const date = new Date()
-	var dd = String(date.getDate()).padStart(2, '0');
-	var mm = String(date.getMonth() + 1).padStart(2, '0');
-	var yyyy = date.getFullYear() + 1;
-	var newDate = dd + mm + yyyy;
-
-	// Uitgiftedatum identiteitsbewijs
-	var dd = String(today.getDate() + 1).padStart(2, '0');
-	var mm = String(today.getMonth() + 3).padStart(2, '0');
-	var yyyy = today.getFullYear() - 2;
-	var uitgiftedatum = dd + mm + yyyy;
-
-	// Vervaldatum identiteitsbewijs
-	var dd = String(today.getDate() + 1).padStart(2, '0');
-	var mm = String(today.getMonth() + 3).padStart(2, '0');
-	var yyyy = today.getFullYear() + 8;
-	var vervaldatum = dd + mm + yyyy;
-
 	// Acties voordat de gegevens toegevoegd worden
 	test.beforeEach('test', async ({ page }) => {
 		const loginPage = new LoginPage(page)
 		await loginPage.SuccessFactorsLogin()
-		await loginPage.gaNaarZoekTextBox()
 	});
 
 	// Acties nadat de gegevens zijn ingevoerd
@@ -57,30 +30,17 @@ try {
 		let naam = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
 		test('toevoegen_medewerker_' + naam, async ({ page }) => {
 			const basisgegevensPage = new BasisgegevensPage(page)
-
+			const loginPage = new LoginPage(page)
+		
+			await loginPage.gaNaarZoekTextBox(`${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`)
+			
 			await basisgegevensPage.Basisgegevens(
 				personsList[teller]['basisgegevens__datum_in_dienst'],
 				personsList[teller]['basisgegevens__bedrijf'],
 				personsList[teller]['basisgegevens__gebeurtenisreden'],
-				personsList[teller]['basisgegevens__sjabloon'])
+				personsList[teller]['basisgegevens__sjabloon'],
+				`${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`)
 
-			await basisgegevensPage.Naamgegevens(
-				personsList[teller]['naamsgegevens__titel'],
-				personsList[teller]['naamsgegevens__voornaam'],
-				personsList[teller]['naamsgegevens__achternaam'])
-
-			await basisgegevensPage.Persoonsgegevens(
-				personsList[teller]['persoonsgegevens__geboortedatum'],
-				personsList[teller]['persoonsgegevens__geboorteland'],
-				personsList[teller]['persoonsgegevens__geboorteplaats'])
-
-			await basisgegevensPage.BSNgegevens(
-				personsList[teller]['burger_service_nummer__landregio'],
-				personsList[teller]['burger_service_nummer__identiteitstype'],
-				personsList[teller]['burger_service_nummer__BSN'],
-				personsList[teller]['burger_service_nummer__is_primair'])
-
-			await basisgegevensPage.Doorgaan()
 
 			await page.waitForTimeout(500)
 

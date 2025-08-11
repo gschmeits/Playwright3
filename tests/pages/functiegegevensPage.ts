@@ -48,47 +48,80 @@ export class FunctiegegevensPage extends BasePage {
 		}
 
 		// Selecteren contractsoort
-		await this.page.locator('#__box39-arrow').click()
+		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
+			await this.page.locator('#__box39-arrow').click()
+		}
+		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
+			await this.page.locator('#__box21-arrow').click()
+		}
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__contractsoort, { exact: true }).click();
 		await this.page.waitForTimeout(wachttijd)
 
 		// Selecteren medewerkersgroep
-		await this.page.locator('#__box41-arrow').click()
+		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
+			await this.page.locator('#__box41-arrow').click()
+		}
+		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
+			await this.page.locator('#__box23-arrow').click()
+		}
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__medewerkersgroep).click();
 		await this.page.waitForTimeout(wachttijd)
 
 		// Selecteren medewerkerssubgroep
-		await this.page.locator('#__box42-arrow').click()
+		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
+			await this.page.locator('#__box42-arrow').click()
+		}
+		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
+			await this.page.locator('#__box24-arrow').click()
+		}
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__medewerkerssubgroep).click();
 		await this.page.waitForTimeout(wachttijd)
 
 		// Vul de einddatum van het contract in
-		if (await this.page.locator('#__picker9-inner').isVisible() == true) {
-			await this.page.locator('#__picker9-inner').fill(newDate)
+		if (await this.page.getByRole('textbox', { name: 'Einddatum contract' }).isVisible() == true) {
+			await this.page.getByRole('textbox', { name: 'Einddatum contract' }).fill(newDate)
 			await this.page.waitForTimeout(wachttijd)
 		}
 
 		// Vul de basis werkuren per week in
-		await this.page.locator('#__input44-inner').fill(functiegegevens__basis_werkuren_per_week)
+		await this.page.getByRole('textbox', { name: 'Basis werkuren per week' }).fill(functiegegevens__basis_werkuren_per_week)
 		await this.page.waitForTimeout(wachttijd)
+
+		// Klik op de 'OK' knop indien de melding verschijn: 
+		// '1. Waarschuwing: Wanneer u een arbeidsduur wijziging aanvraagt, pas dan ook Uw werkrooster aan zodat het overeenkomt.' 
+		if (await this.page.getByRole('button', { name: 'OK', exact: true }).isVisible) {
+			await this.page.getByRole('button', { name: 'OK', exact: true }).click();
+		}
+
 		// Vul de werkdagen per week in
-		await this.page.locator('#__input45-inner').fill(functiegegevens__werkdagen_per_week)
+		await this.page.getByRole('textbox', { name: 'Werkdagen per week' }).fill(functiegegevens__werkdagen_per_week)
 		await this.page.waitForTimeout(wachttijd)
 		// Vul de FTE in
-		await this.page.locator('#__input46-inner').fill(functiegegevens__FTE)
+		await this.page.getByRole('textbox', { name: 'FTE' }).fill(functiegegevens__FTE)
 		await this.page.waitForTimeout(wachttijd)
 		// Selecteer uitgesloten van automatisch verhogingen
-		if (await this.page.locator('#__box47-arrow').isVisible) {
-			await this.page.locator('#__box47-arrow').click()
-			await this.page.waitForTimeout(wachttijd)
-			await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
-			await this.page.waitForTimeout(wachttijd)
+		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
+			if (await this.page.locator('#__box47-arrow').isVisible) {
+				await this.page.locator('#__box47-arrow').click()
+				await this.page.waitForTimeout(wachttijd)
+				await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
+				await this.page.waitForTimeout(wachttijd)
+			}
 		}
+		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
+			if (await this.page.locator('#__box29-arrow').isVisible) {
+				await this.page.locator('#__box29-arrow').click()
+				await this.page.waitForTimeout(wachttijd)
+				await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
+				await this.page.waitForTimeout(wachttijd)
+			}
+		}
+
 		// Vul de standplaats in
-		await this.page.locator('#__input47-inner').fill(functiegegevens__standplaats)
+		await this.page.getByRole('textbox', { name: 'Standplaats' }).fill(functiegegevens__standplaats)
 		await this.page.waitForTimeout(wachttijd)
 	}
 
@@ -102,17 +135,17 @@ export class FunctiegegevensPage extends BasePage {
 		// -------------------------------------------------	
 
 		// Knop toevoegen	
-		await this.page.locator('#__button65-inner').click()
+		await this.page.getByRole('button', { name: 'Werkrelaties Toevoegen' }).click();
 		await this.page.waitForTimeout(wachttijd)
 
 		// Selectie van het type relatis 
-		await this.page.locator('#__box72-arrow').click()
+		await this.page.getByRole('grid', { name: 'Tabel met gerelateerde' }).getByLabel('Opties selecteren').click();
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(werkrelaties__type_relatie, { exact: true }).click();
 		await this.page.waitForTimeout(wachttijd)
 
 		// Selecteer de naam van de relatie
-		await this.page.locator('#__input68-inner').fill(werkrelaties__naam)
+		await this.page.getByRole('textbox', { name: 'Naam' }).fill(werkrelaties__naam)
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.locator('#__result0').click()
 		await this.page.waitForTimeout(wachttijd)
