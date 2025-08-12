@@ -18,6 +18,14 @@ export class FunctiegegevensPage extends BasePage {
 		functiegegevens__FTE: string,
 		functiegegevens__uitgesloten_van_automatische_verhogingen: string,
 		functiegegevens__standplaats: string,
+		functiegegevens__landstandplaats: string,
+		functiegegevens__einddatum__proeftijd: string,
+		functiegegevens__CAO_gebied: string,
+		functiegegevens__CAO_soort: string,
+		functiegegevens__CAO_schaal: string,
+		functiegegevens__salaristrede: string,
+		functiegegevens__contracttype: string,
+		functiegegevens__verhuisplicht: string,
 		wachttijd: number = 500
 	) {
 		// -------------------------------------------------
@@ -35,6 +43,7 @@ export class FunctiegegevensPage extends BasePage {
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__formatieplaats, { exact: true }).click();
 		await this.page.waitForTimeout(wachttijd)
+
 		// Selecteren personeelssubgebied, alleen bij "functiegegevens__formatieplaats": "Beheerder ICT (50003393)"
 		if (functiegegevens__formatieplaats == "Beheerder ICT (50003393)") {
 			var personeelssubgebied = functiegegevens__personeelssubgebied
@@ -48,34 +57,34 @@ export class FunctiegegevensPage extends BasePage {
 		}
 
 		// Selecteren contractsoort
-		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
-			await this.page.locator('#__box39-arrow').click()
-		}
-		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
-			await this.page.locator('#__box21-arrow').click()
-		}
+		await this.page.getByRole('combobox', { name: 'Contractsoort' }).click();
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Contractsoort' }).fill(functiegegevens__contractsoort);
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__contractsoort, { exact: true }).click();
 		await this.page.waitForTimeout(wachttijd)
 
+		// Selecteren contracttype
+		await this.page.getByRole('combobox', { name: 'Contracttype' }).click();
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Contracttype' }).fill(functiegegevens__contracttype.substring(0, 5));
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByText(functiegegevens__contracttype, { exact: true }).click();
+		await this.page.waitForTimeout(wachttijd)
+
+
 		// Selecteren medewerkersgroep
-		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
-			await this.page.locator('#__box41-arrow').click()
-		}
-		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
-			await this.page.locator('#__box23-arrow').click()
-		}
+		await this.page.getByRole('combobox', { name: 'Medewerkersgroep' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Medewerkersgroep' }).fill(functiegegevens__medewerkersgroep.substring(0, 5))
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__medewerkersgroep).click();
 		await this.page.waitForTimeout(wachttijd)
 
 		// Selecteren medewerkerssubgroep
-		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
-			await this.page.locator('#__box42-arrow').click()
-		}
-		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
-			await this.page.locator('#__box24-arrow').click()
-		}
+		await this.page.getByRole('combobox', { name: 'Medewerkerssubgroep' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Medewerkerssubgroep' }).fill(functiegegevens__medewerkerssubgroep.substring(0, 3))
 		await this.page.waitForTimeout(wachttijd)
 		await this.page.getByText(functiegegevens__medewerkerssubgroep).click();
 		await this.page.waitForTimeout(wachttijd)
@@ -86,43 +95,87 @@ export class FunctiegegevensPage extends BasePage {
 			await this.page.waitForTimeout(wachttijd)
 		}
 
+		// Vul de einddatum van de proeftijd in
+		if (await this.page.getByRole('textbox', { name: 'Einddatum proeftijd' }).isVisible() == true) {
+			await this.page.getByRole('textbox', { name: 'Einddatum proeftijd' }).fill(functiegegevens__einddatum__proeftijd)
+			await this.page.waitForTimeout(wachttijd)
+		}
+
 		// Vul de basis werkuren per week in
 		await this.page.getByRole('textbox', { name: 'Basis werkuren per week' }).fill(functiegegevens__basis_werkuren_per_week)
 		await this.page.waitForTimeout(wachttijd)
 
 		// Klik op de 'OK' knop indien de melding verschijn: 
 		// '1. Waarschuwing: Wanneer u een arbeidsduur wijziging aanvraagt, pas dan ook Uw werkrooster aan zodat het overeenkomt.' 
-		if (await this.page.getByRole('button', { name: 'OK', exact: true }).isVisible) {
-			await this.page.getByRole('button', { name: 'OK', exact: true }).click();
-		}
+		// if (await this.page.getByRole('button', { name: 'OK', exact: true }).isVisible) {
+		// 	await this.page.getByRole('button', { name: 'OK', exact: true }).click();
+		// }
 
 		// Vul de werkdagen per week in
 		await this.page.getByRole('textbox', { name: 'Werkdagen per week' }).fill(functiegegevens__werkdagen_per_week)
 		await this.page.waitForTimeout(wachttijd)
+
 		// Vul de FTE in
-		await this.page.getByRole('textbox', { name: 'FTE' }).fill(functiegegevens__FTE)
+		await this.page.getByRole('textbox', { name: 'FTE - berekening Payroll' }).fill(functiegegevens__FTE)
 		await this.page.waitForTimeout(wachttijd)
+
+		// Selecteer CAO-gebied
+		await this.page.getByRole('combobox', { name: 'CAO-gebied' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'CAO-gebied' }).fill(functiegegevens__CAO_gebied.substring(0, 5))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__CAO_gebied }).click();
+		await this.page.waitForTimeout(wachttijd)
+
+		// Selecteer CAO-soort
+		await this.page.getByRole('combobox', { name: 'CAO-soort' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'CAO-soort' }).fill(functiegegevens__CAO_soort.substring(0, 5))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__CAO_soort }).click();
+		await this.page.waitForTimeout(wachttijd)
+
+		// Selecteer CAO-schaal
+		await this.page.getByRole('combobox', { name: 'CAO-schaal' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'CAO-schaal' }).fill(functiegegevens__CAO_schaal.substring(0, 5))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__CAO_schaal }).click();
+		await this.page.waitForTimeout(wachttijd)
+	
+		// Selecteer Salaristrede
+		await this.page.getByRole('combobox', { name: 'Salaristrede' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Salaristrede' }).fill(functiegegevens__salaristrede.substring(0, 5))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__salaristrede }).click();
+		await this.page.waitForTimeout(wachttijd)
+
 		// Selecteer uitgesloten van automatisch verhogingen
-		if (functiegegevens__medewerkersgroep == 'Bezoldigd personeel (A)') {
-			if (await this.page.locator('#__box47-arrow').isVisible) {
-				await this.page.locator('#__box47-arrow').click()
-				await this.page.waitForTimeout(wachttijd)
-				await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
-				await this.page.waitForTimeout(wachttijd)
-			}
-		}
-		if (functiegegevens__medewerkersgroep == 'Gastvrijheid ovk (B)') {
-			if (await this.page.locator('#__box29-arrow').isVisible) {
-				await this.page.locator('#__box29-arrow').click()
-				await this.page.waitForTimeout(wachttijd)
-				await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
-				await this.page.waitForTimeout(wachttijd)
-			}
-		}
+		await this.page.getByRole('combobox', { name: 'Uitgesloten van automatische' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Uitgesloten van automatische' }).fill(functiegegevens__uitgesloten_van_automatische_verhogingen.substring(0, 2))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
 
 		// Vul de standplaats in
 		await this.page.getByRole('textbox', { name: 'Standplaats' }).fill(functiegegevens__standplaats)
+
+		// Selecteer Land standplaats
+		await this.page.getByRole('combobox', { name: 'Land standplaats' }).click()
 		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Land standplaats' }).fill(functiegegevens__landstandplaats.substring(0, 5))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__landstandplaats }).click();
+		await this.page.waitForTimeout(wachttijd)
+
+		// Selecteer verhuisplicht
+		await this.page.getByRole('combobox', { name: 'Verhuisplicht' }).click()
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('combobox', { name: 'Verhuisplicht' }).fill(functiegegevens__verhuisplicht.substring(0, 2))
+		await this.page.waitForTimeout(wachttijd)
+		await this.page.getByRole('option', { name: functiegegevens__verhuisplicht }).click();
+
 	}
 
 	async Werkrelaties(

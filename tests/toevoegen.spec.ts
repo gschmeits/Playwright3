@@ -12,7 +12,7 @@ try {
 	const personsData = require("../test-data/persons.json")
 
 	// Wijs de data toe aan variabele 'personsList' met als functiegegevens_medewerkersgroeps = "Gastvrijheid ovk (B)"
-	//const personsList = personsData.filter((item: { functiegegevens__medewerkersgroep: string; }) => item.functiegegevens__medewerkersgroep === "Gastvrijheid ovk (B)");
+	// const personsList = personsData.filter((item: { functiegegevens__medewerkersgroep: string; }) => item.functiegegevens__medewerkersgroep === "Gastvrijheid ovk (B)");
 	const personsList = personsData
 
 	// Acties voordat de gegevens toegevoegd worden
@@ -24,14 +24,14 @@ try {
 	// Acties nadat de gegevens zijn ingevoerd
 	test.afterEach('test', async ({ page }) => {
 		// Sluit de browser
-		//await page.close()
+		await page.close()
 	})
 
 	// Herhaal de stappen zo vaak als dat er records zijn in 'personsList' 
-	for (let teller = 1; teller < 2; teller++) {
+	for (let teller = 2; teller < 3; teller++) {
 		let naamTeller = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
 		let zoekNaam = `${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`
-		let medewerkersgroep = `${personsList[teller]['functiegegevens__medewerkersgroep']}`.toUpperCase()
+		let medewerkersgroep = `${personsList[teller]['functiegegevens__medewerkersgroep']}`
 
 		test('toevoegen_medewerker_' + naamTeller, async ({ page }) => {
 			const loginPage = new LoginPage(page)
@@ -40,8 +40,8 @@ try {
 			const functiegegevensPage = new FunctiegegevensPage(page)
 			const doorvoerPage = new DoorvoerPage(page)
 
-			await loginPage.gaNaarZoekTextBox(zoekNaam, medewerkersgroep)
-			await loginPage.searchBox(zoekNaam, medewerkersgroep)
+			await loginPage.gaNaarZoekTextBox(zoekNaam, medewerkersgroep.toUpperCase())
+			await loginPage.searchBox(zoekNaam, medewerkersgroep.toUpperCase())
 
 			await basisgegevensPage.Basisgegevens(
 				personsList[teller]['basisgegevens__datum_in_dienst'],
@@ -99,10 +99,11 @@ try {
 
 				await persoonlijkegegevensPage.Doorgaan()
 			}
-			else {
+			else { // Specifiek voor groep B
 				await page.getByRole('textbox', { name: 'Initiële instroom datum (handmatig)' }).fill(datum())
 				await page.getByRole('textbox', { name: 'Initiële instroom datum (handmatig)' }).press('Enter')
 			}
+
 			await functiegegevensPage.Functiegegevens(
 				personsList[teller]['functiegegevens__formatieplaats'],
 				personsList[teller]['functiegegevens__personeelssubgebied'],
@@ -114,7 +115,15 @@ try {
 				personsList[teller]['functiegegevens__werkdagen_per_week'],
 				personsList[teller]['functiegegevens__FTE'],
 				personsList[teller]['functiegegevens__uitgesloten_van_automatische_verhogingen'],
-				personsList[teller]['functiegegevens__standplaats']
+				personsList[teller]['functiegegevens__standplaats'],
+				personsList[teller]["functiegegevens__landstandplaats"],
+				personsList[teller]["functiegegevens__einddatum__proeftijd"],
+				personsList[teller]["functiegegevens__CAO__gebied"],
+				personsList[teller]["functiegegevens__CAO__soort"],
+				personsList[teller]["functiegegevens__CAO__schaal"],
+				personsList[teller]["functiegegevens__salaristrede"],
+				personsList[teller]["functiegegevens__contracttype"],
+				personsList[teller]["functiegegevens__verhuisplicht"]
 			)
 
 			await functiegegevensPage.Werkrelaties(
@@ -122,7 +131,7 @@ try {
 				personsList[teller]['werkrelaties__naam']
 			)
 
-			if (medewerkersgroep == 'BEZOLDIGD PERSONEEL (A)') {
+			if (medewerkersgroep.toUpperCase() == 'BEZOLDIGD PERSONEEL (A)') {
 				await functiegegevensPage.Werkvergunning(
 					personsList[teller]['werkvergunning__land'],
 					personsList[teller]['werkvergunning__documenttype'],
@@ -135,19 +144,33 @@ try {
 
 			await functiegegevensPage.Doorgaan()
 
+			await functiegegevensPage.Beloning(
+				personsList[teller]['beloning__bedrag']
+			)
 
-			await page.waitForTimeout(5000)
-			// await functiegegevensPage.Doorvoeren()
+			await functiegegevensPage.Betalingsgegevens(
+				personsList[teller]['betalingsinformatie__bankland'],
+				personsList[teller]['betalingsinformatie__IBAN'],
+				personsList[teller]['betalingsinformatie__naam_rekeninghouder']
+			)
 
-			// await functiegegevensPage.Doorgaan()
+			await functiegegevensPage.UploadIdentiteitPDF(
+				'foo.pdf'
+			)
 
-			// await doorvoerPage.Reactietoevoegen(
-			// 	naam
-			// )
+			await page.waitForTimeout(2000)
 
-			// await doorvoerPage.Doorvoeren()
+			await functiegegevensPage.Doorvoeren()
 
-			// await doorvoerPage.ControleerMelding()
+			await functiegegevensPage.Doorgaan()
+
+			await doorvoerPage.Reactietoevoegen(
+				naamTeller
+			)
+
+			await doorvoerPage.Doorvoeren()
+
+			await doorvoerPage.ControleerMelding()
 
 		})
 	}

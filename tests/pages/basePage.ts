@@ -8,7 +8,19 @@ export default class BasePage {
         this.page = page;
     }
 
-    async gaNaarZoekTextBox(searchObject: string, medewerkersgroep:string='BEZOLDIGD PERSONEEL (A)') {
+    async gaNaarZoekTextBoxVerwijderen(searchObject: string) {
+
+        // Vul de zoekbalk in
+        await this.page
+            .getByRole("textbox", { name: "De zoekresultaten van ‘" })
+            .click();
+        await this.page
+            .getByRole("textbox", { name: "De zoekresultaten van ‘" })
+            .fill(searchObject);
+        await this.page.getByRole('textbox', { name: 'De zoekresultaten van ‘' }).press('Enter');
+    }
+
+    async gaNaarZoekTextBox(searchObject: string, medewerkersgroep: string = 'BEZOLDIGD PERSONEEL (A)') {
         if (medewerkersgroep === 'BEZOLDIGD PERSONEEL (A)') {
             searchObject = 'Nieuwe medewerker toevoegen'
         }
@@ -30,9 +42,24 @@ export default class BasePage {
         await this.page.getByText(searchObject).first().click();
 
         if (medewerkersgroep === 'Gastvrijheid ovk (B)') {
-            await this.page.locator('#__button2-BDI-content').click() // acties
+            await this.page.getByRole('button', { name: 'Acties' }).click();
+            //await this.page.locator('#__button2-BDI-content').click() // acties
             await this.page.getByText('Gelijktijdige betrekking toevoegen').click()
         }
+    }
+
+    async searchPersoon(searchObject: string, wachttijd: number = 1000) {
+        await this.page.waitForTimeout(wachttijd)
+        if (await this.page.locator('#search').getByText('Er zijn geen resultaten').isVisible() == false) {
+            await this.page.getByText(searchObject).first().click()
+        }
+    }
+
+    async actie(uittevoerenactie: string, wachttijd: number = 3000) {
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByRole('button', { name: 'Acties' }).click();// acties
+        await this.page.waitForTimeout(1000)
+        await this.page.getByText(uittevoerenactie).click()
     }
 
     async Doorgaan() {
@@ -199,7 +226,7 @@ export function titelNaam(teller: number, voornaam: string, achternaam: string, 
     }
     // Vervang spaties door '_'
     let group = groep.replace(' ', '_')
-    return teller2 + '_' + voornaam + '_' + achternaam + '_' + group
+    return teller2 + '_' + voornaam + '_' + achternaam + '_' + group.replace(' ', '_')
 }
 
 export function datum(days: number = 0, months: number = 0, years: number = 0): string {
