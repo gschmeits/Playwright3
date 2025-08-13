@@ -25,24 +25,10 @@ export class BasisgegevensPage extends BasePage {
 			.fill(basisgegevens__datum_in_dienst);
 		await this.page.waitForTimeout(wachttijd);
 
-		// Selecteer de naam van het bedrijf
-		await this.page.locator("#__box0-arrow").click();
-		await this.page.getByText(basisgegevens__bedrijf).click();
-		await this.page.waitForTimeout(wachttijd);
-
-		// Selecteer de gebeurtenisreden
-		await this.page.locator("#__box1-arrow").click();
-		await this.page.getByText(basisgegevens__gebeurtenisreden).click();
-		await this.page.waitForTimeout(wachttijd);
-
-		// Selecteer het sjabloon
-		await this.page.locator("#__box2-arrow").click();
-		await this.page.getByText(basisgegevens__sjabloon).click();
-		await this.page.waitForTimeout(wachttijd);
-
-		// Druk op de knop om door te gaan
-		await this.page.getByRole("button", { name: "Doorgaan" }).click();
-		await this.page.waitForTimeout(wachttijd);
+		await this.comboboxSelectie('Bedrijf', basisgegevens__bedrijf, 15)
+		await this.comboboxSelectie('Gebeurtenisreden', basisgegevens__gebeurtenisreden, 15)
+		await this.comboboxSelectie('Sjabloon', basisgegevens__sjabloon, 10)
+		await this.Doorgaan()
 	}
 
 	async Naamgegevens(
@@ -53,17 +39,9 @@ export class BasisgegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen naamsgegevens
 		// -------------------------------------------------
-		// Selecteer de aanhef
-		await this.page.getByRole('form', { name: 'Naamgegevens' }).getByLabel('Opties selecteren').click();
-		await this.page.getByText(naamsgegevens__titel).click();
-
-		// Vul de roepnaam in
-		await this.page.getByRole('textbox', { name: 'Roepnaam' }).click();
-		await this.page.getByRole('textbox', { name: 'Roepnaam' }).fill(naamsgegevens__voornaam);
-
-		// Vul de achternaam in		
-		await this.page.getByRole('textbox', { name: 'Geboortenaam (zonder' }).click();
-		await this.page.getByRole('textbox', { name: 'Geboortenaam (zonder' }).fill(naamsgegevens__achternaam);
+		await this.comboboxSelectie('Aanhef', naamsgegevens__titel, 3)					// Selecteer de aanhef
+		await this.fillTextBox('Roepnaam', naamsgegevens__voornaam)						// Vul de roepnaam in
+		await this.fillTextBox('Geboortenaam (zonder voorvoegsel)', naamsgegevens__achternaam)		// Vul de achternaam in	
 	}
 
 	async Persoonsgegevens(
@@ -74,21 +52,9 @@ export class BasisgegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen persoonsgegevens
 		// -------------------------------------------------
-
-		// Vul de geboortedatum in
-		await this.page.getByRole('textbox', { name: 'Geboortedatum' }).click();
-		await this.page.getByRole('textbox', { name: 'Geboortedatum' }).fill(persoonsgegevens__geboortedatum);
-
-		// Selecteer het geboorteland
-		await this.page.getByRole('combobox', { name: 'Geboorteland' }).click();
-		await this.page.waitForTimeout(wachttijd);
-		await this.page.getByRole('combobox', { name: 'Geboorteland' }).fill(persoonsgegevens__geboorteland);
-		await this.page.waitForTimeout(wachttijd);
-		await this.page.getByText('Nederland', { exact: true }).click();
-
-		// Vul de geboorteplaats in
-		await this.page.getByRole('textbox', { name: 'Geboorteplaats' }).click();
-		await this.page.getByRole('textbox', { name: 'Geboorteplaats' }).fill(persoonsgegevens__geboorteplaats);
+		await this.fillTextBox('Geboortedatum', persoonsgegevens__geboortedatum)		// Vul de geboortedatum in
+		await this.comboboxSelectie('Geboorteland', persoonsgegevens__geboorteland)		// Selecteer het geboorteland
+		await this.fillTextBox('Geboorteplaats', persoonsgegevens__geboorteplaats)		// Vul de geboorteplaats in
 	}
 
 	async BSNgegevens(
@@ -101,28 +67,17 @@ export class BasisgegevensPage extends BasePage {
 		// Invullen burger service nummer
 		// -------------------------------------------------
 
-		// Druk op Burger Service Nummer
-		await this.page.getByRole('button', { name: 'Burger Service Nummer (BSN)' }).click();
-		await this.page.waitForTimeout(wachttijd);
+		// Druk op Burger Service Nummer Toevoegen
+		await this.clickButton('Burger Service Nummer (BSN)')
+
 		// Selecteer land/regio
 		await this.page.getByRole('gridcell', { name: 'Land/regio' }).getByLabel('Opties selecteren').click();
 		await this.page.waitForTimeout(wachttijd);
 		await this.page.getByRole('option', { name: burger_service_nummer__landregio }).click()
 		await this.page.waitForTimeout(wachttijd);
-		// Selecteer het indentiteitstype
-		await this.page.getByRole('gridcell', { name: 'Identiteitstype' }).getByLabel('Opties selecteren').click();
-		await this.page.waitForTimeout(wachttijd);
-		await this.page.getByText(burger_service_nummer__identiteitstype).click();
-		await this.page.waitForTimeout(wachttijd);
 
-		// Vul het BSN nummer in		
-		await this.page.getByRole('textbox', { name: 'BSN' }).fill(burger_service_nummer__BSN);
-		await this.page.waitForTimeout(wachttijd);
-
-		// Selecteer is primair
-		await this.page.getByRole('gridcell', { name: 'Is primair' }).getByLabel('Opties selecteren').click();
-		await this.page.waitForTimeout(wachttijd);
-		await this.page.getByRole('option', { name: burger_service_nummer__is_primair }).locator('div').nth(2).click();
-		await this.page.waitForTimeout(wachttijd);
+		await this.comboboxOptionSelection('Identiteitstype', burger_service_nummer__identiteitstype)	// Selecteer het indentiteitstype
+		await this.fillTextBox('BSN', burger_service_nummer__BSN)								// Vul het BSN nummer in
+		await this.comboboxOptionSelection('Is primair', burger_service_nummer__is_primair)			// Selecteer is primair
 	}
 }

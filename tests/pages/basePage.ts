@@ -55,6 +55,74 @@ export default class BasePage {
         }
     }
 
+    async comboboxSelectie(comboboxName: string, comboboxText: string, substringChars: number = 5, wachttijd: number = 500) {
+        let fillText = comboboxText
+
+        var functieC = comboboxText
+        if (comboboxText.indexOf('(') > 0 && comboboxName === 'Formatieplaats') {
+            var functiegegevensA = comboboxText.split('(')
+            var functieB = functiegegevensA[1]
+            functieC = functieB.replace(')', '')
+            substringChars = 0
+            fillText = functieC
+        }
+
+        if (substringChars != 0) {
+            fillText = comboboxText.substring(0, substringChars)
+        }
+
+        await this.page.getByRole('combobox', { name: comboboxName }).clear()	// Maak de combobox leeg
+        await this.page.getByRole('combobox', { name: comboboxName }).click()
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByRole('combobox', { name: comboboxName }).fill(fillText)
+
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByText(comboboxText, { exact: true }).click();
+        await this.page.waitForTimeout(wachttijd)
+    }
+
+    async comboboxSelectieLabel(comboboxName: string, labelText: string, comboboxText: string, substringChars: number = 5, wachttijd: number = 500) {
+        let fillText = comboboxText
+        if (substringChars != 0) {
+            fillText = comboboxText.substring(0, substringChars)
+        }
+        await this.page.getByRole('combobox', { name: comboboxName, exact: true }).click();
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByRole('combobox', { name: comboboxName, exact: true }).fill(fillText);
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByLabel(labelText).getByText(comboboxText, { exact: true }).click();
+        await this.page.waitForTimeout(wachttijd)
+    }
+
+    async comboboxOptionSelection(comboboxName:string, comboboxText: string, substringChars:number = 5) {
+        await this.page.getByRole('combobox', { name: comboboxName }).fill(comboboxText.substring(0,substringChars));
+		await this.page.getByRole('option', { name:comboboxText , exact: true }).click();
+    }
+
+    async optionSelectie(gridcellName: string, is_primair: string, locatorNum: number = 1, wachttijd: number = 500) {
+        await this.page.getByRole('gridcell', { name: gridcellName }).getByLabel('Opties selecteren').click();
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByRole('option', { name: is_primair }).locator('div').nth(locatorNum).click();
+        await this.page.waitForTimeout(wachttijd)
+    }
+
+    async optionLocator(locatorName: string, is_primair: string, locatorNum: number = 1, wachttijd: number = 500) {
+        await this.page.locator(locatorName).click();
+        await this.page.waitForTimeout(wachttijd)
+        await this.page.getByRole('option', { name: is_primair }).locator('div').nth(locatorNum).click();
+        await this.page.waitForTimeout(wachttijd)
+    }
+
+    async fillTextBox(textBoxName: string, textBoxValue: string, booExcat: boolean = false) {
+        await this.page.getByRole('textbox', { name: textBoxName, exact: booExcat }).click();
+        await this.page.getByRole('textbox', { name: textBoxName, exact: booExcat }).fill(textBoxValue);
+    }
+
+    async clickButton(buttonName: string) {
+        await this.page.getByRole('button', { name: buttonName }).click();
+        await this.page.waitForTimeout(1000)
+    }
+
     async actie(uittevoerenactie: string, wachttijd: number = 3000) {
         await this.page.waitForTimeout(wachttijd)
         await this.page.getByRole('button', { name: 'Acties' }).click();// acties

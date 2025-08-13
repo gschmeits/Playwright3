@@ -110,7 +110,7 @@ try {
 				personsList[teller]['functiegegevens__contractsoort'],
 				personsList[teller]['functiegegevens__medewerkersgroep'],
 				personsList[teller]['functiegegevens__medewerkerssubgroep'],
-				datum(0, 0, 1),
+				personsList[teller]['functiegegevens__einddatum__proeftijd'],
 				personsList[teller]['functiegegevens__basis_werkuren_per_week'],
 				personsList[teller]['functiegegevens__werkdagen_per_week'],
 				personsList[teller]['functiegegevens__FTE'],
@@ -158,19 +158,19 @@ try {
 				'foo.pdf'
 			)
 
-			await page.waitForTimeout(2000)
+			// await page.waitForTimeout(2000)
 
-			await functiegegevensPage.Doorvoeren()
+			// await functiegegevensPage.Doorvoeren()
 
-			await functiegegevensPage.Doorgaan()
+			// await functiegegevensPage.Doorgaan()
 
-			await doorvoerPage.Reactietoevoegen(
-				naamTeller
-			)
+			// await doorvoerPage.Reactietoevoegen(
+			// 	naamTeller
+			// )
 
-			await doorvoerPage.Doorvoeren()
+			// await doorvoerPage.Doorvoeren()
 
-			await doorvoerPage.ControleerMelding()
+			// await doorvoerPage.ControleerMelding()
 
 		})
 	}

@@ -1,5 +1,6 @@
 import { Page } from "@playwright/test";
 import BasePage from "./basePage";
+import { strict } from "assert";
 require("dotenv").config();
 
 export class FunctiegegevensPage extends BasePage {
@@ -20,9 +21,9 @@ export class FunctiegegevensPage extends BasePage {
 		functiegegevens__standplaats: string,
 		functiegegevens__landstandplaats: string,
 		functiegegevens__einddatum__proeftijd: string,
-		functiegegevens__CAO_gebied: string,
-		functiegegevens__CAO_soort: string,
-		functiegegevens__CAO_schaal: string,
+		functiegegevens__CAO__gebied: string,
+		functiegegevens__CAO__soort: string,
+		functiegegevens__CAO__schaal: string,
 		functiegegevens__salaristrede: string,
 		functiegegevens__contracttype: string,
 		functiegegevens__verhuisplicht: string,
@@ -31,79 +32,24 @@ export class FunctiegegevensPage extends BasePage {
 		// -------------------------------------------------
 		//	Invullen functie gegevens
 		// -------------------------------------------------		
-
-		// Selecteren formatieplaats
-		var functieC = functiegegevens__formatieplaats
-		if (functiegegevens__formatieplaats.indexOf('(') > 0) {
-			var functiegegevensA = functiegegevens__formatieplaats.split('(')
-			var functieB = functiegegevensA[1]
-			functieC = functieB.replace(')', '')
-		}
-		await this.page.getByRole('combobox', { name: 'Formatieplaats' }).fill(functieC);
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(functiegegevens__formatieplaats, { exact: true }).click();
-		await this.page.waitForTimeout(wachttijd)
-
+		await this.comboboxSelectie('Formatieplaats', functiegegevens__formatieplaats)		// Selecteren formatieplaats
 		// Selecteren personeelssubgebied, alleen bij "functiegegevens__formatieplaats": "Beheerder ICT (50003393)"
 		if (functiegegevens__formatieplaats == "Beheerder ICT (50003393)") {
-			var personeelssubgebied = functiegegevens__personeelssubgebied
-			var personeelssubgebied5 = personeelssubgebied.substring(0, 5)
-			await this.page.getByRole('combobox', { name: 'Personeelssubgebied' }).click();
-			await this.page.waitForTimeout(wachttijd)
-			await this.page.getByRole('combobox', { name: 'Personeelssubgebied' }).fill(personeelssubgebied5);
-			await this.page.waitForTimeout(wachttijd)
-			await this.page.getByText(functiegegevens__personeelssubgebied, { exact: true }).click();
-			await this.page.waitForTimeout(wachttijd)
+			await this.comboboxSelectie('Personeelssubgebied', functiegegevens__personeelssubgebied)
 		}
-
-		// Selecteren contractsoort
-		await this.page.getByRole('combobox', { name: 'Contractsoort' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Contractsoort' }).fill(functiegegevens__contractsoort);
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(functiegegevens__contractsoort, { exact: true }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteren contracttype
-		await this.page.getByRole('combobox', { name: 'Contracttype' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Contracttype' }).fill(functiegegevens__contracttype.substring(0, 5));
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(functiegegevens__contracttype, { exact: true }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-
-		// Selecteren medewerkersgroep
-		await this.page.getByRole('combobox', { name: 'Medewerkersgroep' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Medewerkersgroep' }).fill(functiegegevens__medewerkersgroep.substring(0, 5))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(functiegegevens__medewerkersgroep).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteren medewerkerssubgroep
-		await this.page.getByRole('combobox', { name: 'Medewerkerssubgroep' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Medewerkerssubgroep' }).fill(functiegegevens__medewerkerssubgroep.substring(0, 3))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(functiegegevens__medewerkerssubgroep).click();
-		await this.page.waitForTimeout(wachttijd)
-
+		await this.comboboxSelectie('Contractsoort', functiegegevens__contractsoort)	// Selecteren contractsoort
+		await this.comboboxSelectie('Contracttype', functiegegevens__contracttype)	// Selecteren contracttype
+		await this.comboboxSelectie('Medewerkersgroep', functiegegevens__medewerkersgroep)	// Selecteren medewerkersgroep
+		await this.comboboxSelectie('Medewerkerssubgroep', functiegegevens__medewerkerssubgroep, 3)	// Selecteren medewerkerssubgroep
 		// Vul de einddatum van het contract in
 		if (await this.page.getByRole('textbox', { name: 'Einddatum contract' }).isVisible() == true) {
-			await this.page.getByRole('textbox', { name: 'Einddatum contract' }).fill(newDate)
-			await this.page.waitForTimeout(wachttijd)
+			await this.fillTextBox('Einddatum contract', newDate)
 		}
-
 		// Vul de einddatum van de proeftijd in
 		if (await this.page.getByRole('textbox', { name: 'Einddatum proeftijd' }).isVisible() == true) {
-			await this.page.getByRole('textbox', { name: 'Einddatum proeftijd' }).fill(functiegegevens__einddatum__proeftijd)
-			await this.page.waitForTimeout(wachttijd)
+			await this.fillTextBox('Einddatum proeftijd', functiegegevens__einddatum__proeftijd)
 		}
-
-		// Vul de basis werkuren per week in
-		await this.page.getByRole('textbox', { name: 'Basis werkuren per week' }).fill(functiegegevens__basis_werkuren_per_week)
-		await this.page.waitForTimeout(wachttijd)
+		await this.fillTextBox('Basis werkuren per week', functiegegevens__basis_werkuren_per_week)	// Vul de basis werkuren per week in
 
 		// Klik op de 'OK' knop indien de melding verschijn: 
 		// '1. Waarschuwing: Wanneer u een arbeidsduur wijziging aanvraagt, pas dan ook Uw werkrooster aan zodat het overeenkomt.' 
@@ -111,71 +57,23 @@ export class FunctiegegevensPage extends BasePage {
 		// 	await this.page.getByRole('button', { name: 'OK', exact: true }).click();
 		// }
 
-		// Vul de werkdagen per week in
-		await this.page.getByRole('textbox', { name: 'Werkdagen per week' }).fill(functiegegevens__werkdagen_per_week)
-		await this.page.waitForTimeout(wachttijd)
-
-		// Vul de FTE in
-		await this.page.getByRole('textbox', { name: 'FTE - berekening Payroll' }).fill(functiegegevens__FTE)
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteer CAO-gebied
-		await this.page.getByRole('combobox', { name: 'CAO-gebied' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'CAO-gebied' }).fill(functiegegevens__CAO_gebied.substring(0, 5))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__CAO_gebied }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteer CAO-soort
-		await this.page.getByRole('combobox', { name: 'CAO-soort' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'CAO-soort' }).fill(functiegegevens__CAO_soort.substring(0, 5))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__CAO_soort }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteer CAO-schaal
-		await this.page.getByRole('combobox', { name: 'CAO-schaal' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'CAO-schaal' }).fill(functiegegevens__CAO_schaal.substring(0, 5))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__CAO_schaal }).click();
-		await this.page.waitForTimeout(wachttijd)
-	
-		// Selecteer Salaristrede
-		await this.page.getByRole('combobox', { name: 'Salaristrede' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Salaristrede' }).fill(functiegegevens__salaristrede.substring(0, 5))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__salaristrede }).click();
-		await this.page.waitForTimeout(wachttijd)
+		await this.fillTextBox('Werkdagen per week', functiegegevens__werkdagen_per_week)	// Vul de werkdagen per week in
+		await this.fillTextBox('FTE - berekening Payroll', functiegegevens__FTE)	// Vul de FTE in
+		await this.comboboxSelectie('CAO-gebied', functiegegevens__CAO__gebied)	// Selecteer CAO-gebied
+		await this.comboboxSelectie('CAO-soort', functiegegevens__CAO__soort)	// Selecteer CAO-soort
+		await this.comboboxSelectie('CAO-schaal', functiegegevens__CAO__schaal, 2)	// Selecteer CAO-schaal
+		await this.comboboxSelectie('Salaristrede', functiegegevens__salaristrede, 2)	// Selecteer Salaristrede
 
 		// Selecteer uitgesloten van automatisch verhogingen
-		await this.page.getByRole('combobox', { name: 'Uitgesloten van automatische' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Uitgesloten van automatische' }).fill(functiegegevens__uitgesloten_van_automatische_verhogingen.substring(0, 2))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
+		//await this.page.locator('[id="__box47-arrow"]').click();
+		//await this. page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
+		await this.comboboxOptionSelection('Uitgesloten van automatische', functiegegevens__uitgesloten_van_automatische_verhogingen, 2)
 
-		// Vul de standplaats in
-		await this.page.getByRole('textbox', { name: 'Standplaats' }).fill(functiegegevens__standplaats)
+		await this.page.waitForTimeout(5000)
 
-		// Selecteer Land standplaats
-		await this.page.getByRole('combobox', { name: 'Land standplaats' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Land standplaats' }).fill(functiegegevens__landstandplaats.substring(0, 5))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__landstandplaats }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteer verhuisplicht
-		await this.page.getByRole('combobox', { name: 'Verhuisplicht' }).click()
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Verhuisplicht' }).fill(functiegegevens__verhuisplicht.substring(0, 2))
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: functiegegevens__verhuisplicht }).click();
-
+		await this.fillTextBox('Standplaats', functiegegevens__standplaats)	// Vul de standplaats in
+		await this.comboboxOptionSelection('Land standplaats', functiegegevens__landstandplaats)	// Selecteer Land standplaats
+		await this.comboboxOptionSelection('Verhuisplicht', functiegegevens__verhuisplicht)	// Selecteer verhuisplicht
 	}
 
 	async Werkrelaties(
@@ -186,20 +84,19 @@ export class FunctiegegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen werkrelaties
 		// -------------------------------------------------	
+		await this.clickButton('Werkrelaties Toevoegen')	// Knop toevoegen
 
-		// Knop toevoegen	
-		await this.page.getByRole('button', { name: 'Werkrelaties Toevoegen' }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selectie van het type relatis 
-		await this.page.getByRole('grid', { name: 'Tabel met gerelateerde' }).getByLabel('Opties selecteren').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(werkrelaties__type_relatie, { exact: true }).click();
-		await this.page.waitForTimeout(wachttijd)
+		// Selectie van het type relatie
+		// await this.page.getByRole('grid', { name: 'Tabel met gerelateerde' }).getByLabel('Opties selecteren').click();
+		// await this.page.waitForTimeout(wachttijd)
+		// await this.page.getByText(werkrelaties__type_relatie, { exact: true }).click();
+		// await this.page.waitForTimeout(wachttijd)
+		await this.comboboxOptionSelection('Type relatie', werkrelaties__type_relatie, 3)
 
 		// Selecteer de naam van de relatie
-		await this.page.getByRole('textbox', { name: 'Naam' }).fill(werkrelaties__naam)
-		await this.page.waitForTimeout(wachttijd)
+		// await this.page.getByRole('textbox', { name: 'Naam' }).fill(werkrelaties__naam)
+		// await this.page.waitForTimeout(wachttijd)
+		await this.fillTextBox('Naam', werkrelaties__naam)
 		await this.page.locator('#__result0').click()
 		await this.page.waitForTimeout(wachttijd)
 	}
@@ -215,32 +112,12 @@ export class FunctiegegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen werkvergunning
 		// -------------------------------------------------
-
-		// Selecteer het land/regio
-		var landkort = werkvergunning__land.substring(0, 5)
-		await this.page.getByRole('combobox', { name: 'Land/regio', exact: true }).fill(landkort);
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.locator("#__item457-titleText").click()
-		await this.page.waitForTimeout(wachttijd)
-		// Selecteer het documenttype
-		var documentkort = werkvergunning__documenttype.substring(0, 5)
-		await this.page.getByRole('combobox', { name: 'Documenttype', exact: true }).fill(documentkort);
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: werkvergunning__documenttype }).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Vul het documentnummer in
-		await this.page.locator("#__input63-inner").fill(werkvergunning__documentnummer)
-		await this.page.waitForTimeout(wachttijd)
-		// Vul de uitgiftedatum in
-		await this.page.locator("#__picker29-inner").fill(uitgiftedatum)
-		await this.page.waitForTimeout(wachttijd)
-		// Vul de naam van de uitgevende instantie in
-		await this.page.locator('#__input65-inner').fill(werkvergunning__uitgevende_instantie)
-		await this.page.waitForTimeout(wachttijd)
-		// Vul de vervaldatum in
-		await this.page.locator('#__picker30-inner').fill(vervaldatum)
-		await this.page.waitForTimeout(wachttijd)
+		await this.comboboxOptionSelection('Land/regio', werkvergunning__land)	// Selecteer het land/regio
+		await this.comboboxOptionSelection('Documenttype', werkvergunning__documenttype)	// Selecteer het documenttype
+		await this.fillTextBox('Documentnummer', werkvergunning__documentnummer)	// Vul het documentnummer in
+		await this.fillTextBox('Uitgiftedatum/begindatum', uitgiftedatum)	// Vul de uitgiftedatum in
+		await this.fillTextBox('Uitgevende instantie', werkvergunning__uitgevende_instantie)	// Vul de naam van de uitgevende instantie in
+		await this.fillTextBox('Vervaldatum', vervaldatum)	// Vul de vervaldatum in
 	}
 
 	async Beloning(

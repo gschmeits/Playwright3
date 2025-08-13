@@ -13,37 +13,16 @@ export class PersoonlijkegegevensPage extends BasePage {
 		persoonlijke_gegevens__communicatienaam: string,
 		persoonlijke_gegevens__nationaliteit: string,
 		persoonlijke_gegevens__communicatietaal: string,
-		wachttijd: number = 1000
+		wachttijd: number = 500
 	) {
 		// -------------------------------------------------
 		// Invullen persoonlijke gegevens
 		// -------------------------------------------------
-		// Vul de initialen in
-		await this.page.getByRole('textbox', { name: 'Initialen (met punten' }).click();
-		await this.page.getByRole('textbox', { name: 'Initialen (met punten' }).fill(persoonlijke_gegevens__initialen);
-
-		// Vul de voornamen in
-		await this.page.getByRole('textbox', { name: 'Voornamen' }).click();
-		await this.page.getByRole('textbox', { name: 'Voornamen' }).fill(persoonlijke_gegevens__voornamen);
-
-		// Selecteer de communicatie naam
-		await this.page.locator('#__box14-arrow').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(persoonlijke_gegevens__communicatienaam).click();
-		await this.page.waitForTimeout(wachttijd)
-		// Selecteer de nationaliteit
-		await this.page.getByRole('combobox', { name: 'Nationaliteit', exact: true }).fill(persoonlijke_gegevens__nationaliteit.substring(0, 5));
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByLabel('Nationaliteit is verplicht').getByText(persoonlijke_gegevens__nationaliteit, { exact: true }).click();
-		await this.page.waitForTimeout(wachttijd)
-		// Selecteer de communicatietaal
-		var communicatietaal = persoonlijke_gegevens__communicatietaal
-		await this.page.getByRole('combobox', { name: 'Communicatietaal' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Communicatietaal' }).fill(communicatietaal.substring(0, 5));
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(persoonlijke_gegevens__communicatietaal, { exact: true }).click();
-		await this.page.waitForTimeout(wachttijd)
+		await this.fillTextBox('Initialen (met punten ertussen)', persoonlijke_gegevens__initialen)								// Vul de initialen in
+		await this.fillTextBox('Voornamen', persoonlijke_gegevens__voornamen)													// Vul de voornamen in
+		await this.comboboxSelectie('Communicatienaam (' ,persoonlijke_gegevens__communicatienaam)								// Selecteer de communicatie naam
+		await this.comboboxSelectieLabel('Nationaliteit', 'Nationaliteit is verplicht', persoonlijke_gegevens__nationaliteit) 	// Selecteer de nationaliteit
+		await this.comboboxSelectie('Communicatietaal', persoonlijke_gegevens__communicatietaal)								// Selecteer de communicatietaal
 	}
 
 	async Emailgegevens(
@@ -55,25 +34,10 @@ export class PersoonlijkegegevensPage extends BasePage {
 		// -------------------------------------------------		
 		// Invullen email gegevens
 		// -------------------------------------------------
-
-		// Selecteer het soort email adres
-		await this.page.getByRole('button', { name: 'E-mailgegevens Toevoegen' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('gridcell', { name: 'Soort e-mail' }).getByLabel('Opties selecteren').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: emailgegevens__soort_email }).locator('div').nth(1).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Vul het email adres in
-		await this.page.getByRole('textbox', { name: 'E-mailadres' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('textbox', { name: 'E-mailadres' }).fill(emailgegevens__emailadres.trim());
-		await this.page.waitForTimeout(wachttijd)
-		// Selecteer is primair
-		await this.page.getByRole('gridcell', { name: 'Is primair' }).getByLabel('Opties selecteren').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: emailgegevens__is_primair }).locator('div').nth(1).click();
-		await this.page.waitForTimeout(wachttijd)
+		await this.clickButton('E-mailgegevens Toevoegen')								// Druk Toevoegen
+		await this.comboboxSelectie('Soort e-mail', emailgegevens__soort_email)			// Selecteer het soort email adres
+		await this.fillTextBox('E-mailadres',emailgegevens__emailadres.trim() )			// Vul het email adres in
+		await this.optionSelectie('Is primair', emailgegevens__is_primair)				// Selecteer is primair
 	}
 
 	async Telefoongegevens(
@@ -85,26 +49,10 @@ export class PersoonlijkegegevensPage extends BasePage {
 		// -------------------------------------------------		
 		// Invullen telefoon gegevens
 		// -------------------------------------------------
-
-		// Selecteer het soort telefoon
-		await this.page.getByRole('button', { name: 'Telefoongegevens Toevoegen' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('gridcell', { name: 'Soort telefoon' }).getByLabel('Opties selecteren').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(telefoongegevens__soort_telefoon).click();
-		await this.page.waitForTimeout(wachttijd)
-
-		// Vul het telefoonnummer in
-		await this.page.getByRole('textbox', { name: 'Telefoonnummer' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('textbox', { name: 'Telefoonnummer' }).fill(telefoongegevens__telefoonnummer);
-		await this.page.waitForTimeout(wachttijd)
-
-		// Selecteer is primair
-		await this.page.locator('#__box28-arrow').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('option', { name: telefoongegevens__is_primair }).locator('div').nth(2).click();
-		await this.page.waitForTimeout(wachttijd)
+		await this.clickButton('Telefoongegevens toevoegen')							// Druk op toevoegen telefoon	
+		await this.comboboxSelectie('Soort telefoon', telefoongegevens__soort_telefoon)	// Selecteer het soort telefoon
+		await this.fillTextBox('Telefoonnummer',telefoongegevens__telefoonnummer )		// Vul het telefoonnummer in
+		await this.optionLocator('#__box28-arrow', telefoongegevens__is_primair, 2)		// Selecteer is primair
 	}
 
 	async Adresgegevens(
@@ -117,21 +65,9 @@ export class PersoonlijkegegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen adres gegevens
 		// -------------------------------------------------
-
-		// Vul de straatnaam in
-		await this.page.getByRole('textbox', { name: 'Straat' }).click();
-		await this.page.getByRole('textbox', { name: 'Straat' }).fill(adressen__straat);
-
-		// Vul het huisnummer in
-		await this.page.getByRole('textbox', { name: 'Huisnummer' }).click();
-		await this.page.getByRole('textbox', { name: 'Huisnummer' }).fill(adressen__huisnummer);
-
-		// Vul de postcode in
-		await this.page.getByRole('textbox', { name: 'Postcode (xxxx xx)' }).click();
-		await this.page.getByRole('textbox', { name: 'Postcode (xxxx xx)' }).fill(adressen__postcode);
-		await this.page.getByRole('textbox', { name: 'Postcode (xxxx xx)' }).press('Tab');
-
-		// Vul de plaatsnaam in
-		await this.page.getByRole('textbox', { name: 'Plaats', exact: true }).fill(adressen__plaats);
+		await this.fillTextBox('Straat', adressen__straat)								// Vul de straatnaam in
+		await this.fillTextBox('Huisnummer', adressen__huisnummer )						// Vul het huisnummer in
+		await this.fillTextBox('Postcode (xxxx xx)', adressen__postcode)				// Vul de postcode in
+		await this.fillTextBox('Plaats', adressen__plaats, true)						// Vul de plaatsnaam in
 	}
 }
