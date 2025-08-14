@@ -1,4 +1,3 @@
-import { Xlsx } from 'exceljs';
 import * as fs from 'fs';
 require('@dotenvx/dotenvx').config()
 
@@ -11,3 +10,4 @@ const sheet: object = workbook.Sheets[sheetName];
 const jsonData: object = XLSX.utils.sheet_to_json(sheet);
 
 fs.writeFileSync(process.env.JSON_PERSONS!, JSON.stringify(jsonData))
+console.log(`Gegevens van bestand: ${process.env.EXCEL_FILE} van worksheet: ${sheetName} zijn overgezet naar ${process.env.JSON_PERSONS}`)

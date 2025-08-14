@@ -77,7 +77,8 @@ export class BasisgegevensPage extends BasePage {
 		await this.page.waitForTimeout(wachttijd);
 
 		await this.comboboxOptionSelection('Identiteitstype', burger_service_nummer__identiteitstype)	// Selecteer het indentiteitstype
-		await this.fillTextBox('BSN', burger_service_nummer__BSN)								// Vul het BSN nummer in
-		await this.comboboxOptionSelection('Is primair', burger_service_nummer__is_primair)			// Selecteer is primair
+		await this.fillTextBox('BSN', burger_service_nummer__BSN)	// Vul het BSN nummer in
+		await this.comboboxOptionSelection('Is primair', burger_service_nummer__is_primair)		// Selecteer is primair
+		await this.page.waitForTimeout(1000)
 	}
 }

@@ -4,7 +4,8 @@
   "description": "Automatically add new employees to SuccessFactors using Playwright",
   "main": "index.js",
   "scripts": {
-    "start": "node ExcelToJSON.js && npx playwright test tests/successfactors.spec.ts  && node JSONtoExcel.js"
+    "toevoegen": "node ExcelToJSON.js && npx playwright test tests/toevoegen.spec.ts && node JSONtoExcel.js",
+    "verwijderen": "npx playwright test tests/verwijderen.spec.ts"
   },
   "keywords": [
     "SuccessFactors",
@@ -25,7 +26,8 @@
     "base64-string": "^1.1.3",
     "exceljs": "^4.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2",
     "xlsx": "^0.18.5"
   }
 }

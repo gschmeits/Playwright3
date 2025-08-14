@@ -1,6 +1,5 @@
 import { Page } from "@playwright/test";
 import BasePage from "./basePage";
-import { strict } from "assert";
 require("dotenv").config();
 
 export class FunctiegegevensPage extends BasePage {
@@ -50,13 +49,6 @@ export class FunctiegegevensPage extends BasePage {
 			await this.fillTextBox('Einddatum proeftijd', functiegegevens__einddatum__proeftijd)
 		}
 		await this.fillTextBox('Basis werkuren per week', functiegegevens__basis_werkuren_per_week)	// Vul de basis werkuren per week in
-
-		// Klik op de 'OK' knop indien de melding verschijn: 
-		// '1. Waarschuwing: Wanneer u een arbeidsduur wijziging aanvraagt, pas dan ook Uw werkrooster aan zodat het overeenkomt.' 
-		// if (await this.page.getByRole('button', { name: 'OK', exact: true }).isVisible) {
-		// 	await this.page.getByRole('button', { name: 'OK', exact: true }).click();
-		// }
-
 		await this.fillTextBox('Werkdagen per week', functiegegevens__werkdagen_per_week)	// Vul de werkdagen per week in
 		await this.fillTextBox('FTE - berekening Payroll', functiegegevens__FTE)	// Vul de FTE in
 		await this.comboboxSelectie('CAO-gebied', functiegegevens__CAO__gebied)	// Selecteer CAO-gebied
@@ -65,12 +57,7 @@ export class FunctiegegevensPage extends BasePage {
 		await this.comboboxSelectie('Salaristrede', functiegegevens__salaristrede, 2)	// Selecteer Salaristrede
 
 		// Selecteer uitgesloten van automatisch verhogingen
-		//await this.page.locator('[id="__box47-arrow"]').click();
-		//await this. page.getByRole('option', { name: functiegegevens__uitgesloten_van_automatische_verhogingen }).click();
 		await this.comboboxOptionSelection('Uitgesloten van automatische', functiegegevens__uitgesloten_van_automatische_verhogingen, 2)
-
-		await this.page.waitForTimeout(5000)
-
 		await this.fillTextBox('Standplaats', functiegegevens__standplaats)	// Vul de standplaats in
 		await this.comboboxOptionSelection('Land standplaats', functiegegevens__landstandplaats)	// Selecteer Land standplaats
 		await this.comboboxOptionSelection('Verhuisplicht', functiegegevens__verhuisplicht)	// Selecteer verhuisplicht
@@ -85,17 +72,9 @@ export class FunctiegegevensPage extends BasePage {
 		// Invullen werkrelaties
 		// -------------------------------------------------	
 		await this.clickButton('Werkrelaties Toevoegen')	// Knop toevoegen
-
-		// Selectie van het type relatie
-		// await this.page.getByRole('grid', { name: 'Tabel met gerelateerde' }).getByLabel('Opties selecteren').click();
-		// await this.page.waitForTimeout(wachttijd)
-		// await this.page.getByText(werkrelaties__type_relatie, { exact: true }).click();
-		// await this.page.waitForTimeout(wachttijd)
-		await this.comboboxOptionSelection('Type relatie', werkrelaties__type_relatie, 3)
+		await this.comboboxOptionSelection('Type relatie', werkrelaties__type_relatie, 3)	// Selectie van het type relatie
 
 		// Selecteer de naam van de relatie
-		// await this.page.getByRole('textbox', { name: 'Naam' }).fill(werkrelaties__naam)
-		// await this.page.waitForTimeout(wachttijd)
 		await this.fillTextBox('Naam', werkrelaties__naam)
 		await this.page.locator('#__result0').click()
 		await this.page.waitForTimeout(wachttijd)
@@ -127,16 +106,8 @@ export class FunctiegegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen beloning
 		// -------------------------------------------------
-
-		// Vul het bedrag van de beloning in
-		await this.page.locator('#__field0-inner').click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.locator('#__field0-inner').fill(beloning__bedrag);
-		await this.page.keyboard.down('Enter')
-
-		// Verwijder overtollige regel
-		await this.page.getByRole('button', { name: 'Verwijderen Beloning 2' }).click();
-		await this.page.waitForTimeout(wachttijd)
+		await this.fillLocator('#__field0-inner', beloning__bedrag)	// Vul het bedrag van de beloning in
+		await this.clickButton('Verwijderen Beloning 2')	// Verwijder overtollige regel
 	}
 
 	async Betalingsgegevens(
@@ -148,25 +119,9 @@ export class FunctiegegevensPage extends BasePage {
 		// -------------------------------------------------
 		// Invullen betalingsgegevens
 		// -------------------------------------------------
-
-		// Invullen bankland
-		await this.page.getByRole('combobox', { name: 'Bankland' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('combobox', { name: 'Bankland' }).fill(betalingsinformatie__bankland.substring(0, 5));
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByText(betalingsinformatie__bankland).click();
-		await this.page.waitForTimeout(wachttijd)
-		// Invullen IBAN
-		await this.page.getByRole('textbox', { name: 'IBAN' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('textbox', { name: 'IBAN' }).fill(betalingsinformatie__IBAN);
-		await this.page.waitForTimeout(wachttijd)
-
-		// Invullen naam rekeninghouder
-		await this.page.getByRole('textbox', { name: 'Rekeninghouder' }).click();
-		await this.page.waitForTimeout(wachttijd)
-		await this.page.getByRole('textbox', { name: 'Rekeninghouder' }).fill(betalingsinformatie__naam_rekeninghouder);
-		await this.page.waitForTimeout(wachttijd)
+		await this.comboboxSelectie('Bankland', betalingsinformatie__bankland)	// Invullen bankland
+		await this.fillTextBox('IBAN', betalingsinformatie__IBAN)	// Invullen IBAN
+		await this.fillTextBox('Rekeninghouder', betalingsinformatie__naam_rekeninghouder)	// Invullen naam rekeninghouder
 
 	}
 	async UploadIdentiteitPDF(filename: string) {
@@ -179,5 +134,4 @@ export class FunctiegegevensPage extends BasePage {
 		]);
 		await fileChooser.setFiles([`${uploadDirectory}${filename}`]);
 	}
-
 }

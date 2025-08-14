@@ -113,6 +113,7 @@ npm install ts-node --save
 npm install typescript --save
 npm install xlsx --save
 npm install exceljs --save
+npm install tsx --save
 ```
 
 Indien het package.json bestand beschikbaar is en de modules zijn nog niet geïnstalleerd, dan kan men met het volgende commando zorgen dat alle benodigde modules geïnstalleerd worden:
@@ -183,7 +184,31 @@ ofwel weghalen of op commentaar zetten (//)
 
 We gaan de scripts alleen uitvoeren met Chrome.
 
+#### Elementherkenning
+
+Middels het volgende commando:
+
+`npx playwright codegen`
+
+is het mogelijk dat de stappen die in de browser uitgevoerd worden als code op te slaan. Heel handing als men niet goed weet hoe men de afzonderlijke elementen dient te herkennen en er zeker van wil zijn dat deze ook altijd goed herkend worden.
+
+Meer informatie hierover is te vinden op: [https://playwright.dev/docs/codegen](https://playwright.dev/docs/codegen).
+
 ## [Bestanden]()
+
+Om alles goed te laten draaien wordt er gebruik gemaakt van verschillende bestanden die aan elkaar gekoppeld dienen te worden, met andere woorden: de bestanden moeten 'weten' waar een ander bestand de vinden is om daar gebruik van de maken. Daarvoor is het belangrijk dat er een correcte 'directory-structuur'aanwezig is.
+
+Een voorbeeld:
+
+In het bestand 'playwright.config.js' staat het volgende aangegeven:
+
+```
+testDir: './tests',
+```
+
+Hiermee wordt aangegeven dat de aangemaakte testscripts direct onder het playwright.config.ts bestand gevonden kunnen worden. Wanneer daar dus geen testscripts is staan of wellicht in een andere directory te vinden zijn, dan kunnen de testen niet uitgevoerd worden.
+
+![title](old_scripts/directorystructuur.png)
 
 Er worden tijdens het scriptproces gebruik gemaakt van verschillende bestanden. De belangrijkste worden hier genoemd en beschreven.
 
@@ -274,7 +299,8 @@ node ExcelToJSON.js
 en vervolgens:
 
 ```
-npx playwright test tests/successfactors.spec.ts
+npx playwright test tests/<bestandsnaam>
+.spec.ts
 ```
 
 en als laatste, nadat het vorige scripts in zijn geheel is uitgevoerd:

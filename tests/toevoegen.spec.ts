@@ -5,7 +5,7 @@ import { titelNaam, datum } from "./pages/basePage";
 import { PersoonlijkegegevensPage } from './pages/persoonlijkegegevensPage';
 import { FunctiegegevensPage } from './pages/functiegegevensPage';
 import { DoorvoerPage } from './pages/doorvoerPage';
-import { text } from 'stream/consumers';
+
 
 try {
 	// Haal de gegevens van de medewerkers uit het bestand
@@ -28,7 +28,7 @@ try {
 	})
 
 	// Herhaal de stappen zo vaak als dat er records zijn in 'personsList' 
-	for (let teller = 2; teller < 3; teller++) {
+	for (let teller =14; teller < 15; teller++) {
 		let naamTeller = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
 		let zoekNaam = `${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`
 		let medewerkersgroep = `${personsList[teller]['functiegegevens__medewerkersgroep']}`
@@ -77,6 +77,7 @@ try {
 				await persoonlijkegegevensPage.Persoonlijkegegevens(
 					personsList[teller]['persoonlijke_gegevens__initialen'],
 					personsList[teller]['persoonlijke_gegevens__voornamen'],
+					personsList[teller]['persoonlijke_gegevens__voorvoegsel'],
 					personsList[teller]['persoonlijke_gegevens__communicatienaam'],
 					personsList[teller]['persoonlijke_gegevens__nationaliteit'],
 					personsList[teller]['persoonlijke_gegevens__communicatietaal'])
@@ -158,20 +159,18 @@ try {
 				'foo.pdf'
 			)
 
-			// await page.waitForTimeout(2000)
+			//await functiegegevensPage.Doorgaan()
+			await functiegegevensPage.Doorvoeren()
 
-			// await functiegegevensPage.Doorvoeren()
-
-			// await functiegegevensPage.Doorgaan()
-
-			// await doorvoerPage.Reactietoevoegen(
-			// 	naamTeller
-			// )
-
-			// await doorvoerPage.Doorvoeren()
-
-			// await doorvoerPage.ControleerMelding()
-
+			await page.waitForTimeout(2000)
+			await doorvoerPage.Reactietoevoegen(
+				naamTeller
+			)
+			await page.waitForTimeout(20000)
+			// 	await doorvoerPage.Doorvoeren()
+			// 	await page.waitForTimeout(2000)
+			// 	await doorvoerPage.ControleerMelding()
+			// 	await page.waitForTimeout(2000)
 		})
 	}
 }

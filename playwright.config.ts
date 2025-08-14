@@ -12,7 +12,7 @@ require('@dotenvx/dotenvx').config()
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  timeout: 60000 * 2,
+  timeout: 60000 * 3,
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,

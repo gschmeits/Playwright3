@@ -9,7 +9,7 @@ export class DoorvoerPage extends BasePage {
 
 	async Reactietoevoegen(
 		naam: string,
-		wachttijd: number = 500
+		wachttijd: number = 1000
 	) {
 		// Vul een reactie in
 		await this.page.getByRole('textbox', { name: 'Voer hier uw reactie in' }).fill('Reactie: test automatisering: ' + naam);
