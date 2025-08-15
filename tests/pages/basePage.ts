@@ -55,7 +55,7 @@ export default class BasePage {
         }
     }
 
-    async comboboxSelectie(comboboxName: string, comboboxText: string, substringChars: number = 5, exact: boolean=false ,wachttijd: number = 500) {
+    async comboboxSelectie(comboboxName: string, comboboxText: string, substringChars: number = 5, exact: boolean = false, wachttijd: number = 500) {
         if (comboboxText != '') {
             let fillText = comboboxText
 
@@ -73,9 +73,9 @@ export default class BasePage {
             }
 
             await this.page.getByRole('combobox', { name: comboboxName, exact: exact }).clear()	// Maak de combobox leeg
-            await this.page.getByRole('combobox', { name: comboboxName, exact:exact }).click()
+            await this.page.getByRole('combobox', { name: comboboxName, exact: exact }).click()
             await this.page.waitForTimeout(wachttijd)
-            await this.page.getByRole('combobox', { name: comboboxName, exact:exact }).fill(fillText)
+            await this.page.getByRole('combobox', { name: comboboxName, exact: exact }).fill(fillText)
 
             await this.page.waitForTimeout(wachttijd)
             await this.page.getByText(comboboxText, { exact: true }).click();

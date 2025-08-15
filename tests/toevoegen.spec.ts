@@ -28,7 +28,7 @@ try {
 	})
 
 	// Herhaal de stappen zo vaak als dat er records zijn in 'personsList' 
-	for (let teller =14; teller < 15; teller++) {
+	for (let teller = 17; teller < 18; teller++) {
 		let naamTeller = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
 		let zoekNaam = `${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`
 		let medewerkersgroep = `${personsList[teller]['functiegegevens__medewerkersgroep']}`
@@ -155,22 +155,14 @@ try {
 				personsList[teller]['betalingsinformatie__naam_rekeninghouder']
 			)
 
-			await functiegegevensPage.UploadIdentiteitPDF(
-				'foo.pdf'
-			)
-
-			//await functiegegevensPage.Doorgaan()
+			await functiegegevensPage.UploadIdentiteitPDF('foo.pdf')
 			await functiegegevensPage.Doorvoeren()
-
-			await page.waitForTimeout(2000)
-			await doorvoerPage.Reactietoevoegen(
-				naamTeller
-			)
-			await page.waitForTimeout(20000)
-			// 	await doorvoerPage.Doorvoeren()
-			// 	await page.waitForTimeout(2000)
-			// 	await doorvoerPage.ControleerMelding()
-			// 	await page.waitForTimeout(2000)
+			await functiegegevensPage.Doorgaan()
+			await doorvoerPage.Reactietoevoegen(naamTeller)
+			await page.waitForTimeout(1000)
+			await doorvoerPage.Doorvoeren()
+			await doorvoerPage.ControleerMelding()
+			await page.waitForTimeout(5000)
 		})
 	}
 }

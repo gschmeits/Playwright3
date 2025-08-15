@@ -133,5 +133,6 @@ export class FunctiegegevensPage extends BasePage {
 			this.page.locator('#__pp1-1-uploader-fu_button').click(),
 		]);
 		await fileChooser.setFiles([`${uploadDirectory}${filename}`]);
+		await this.page.waitForTimeout(3000)
 	}
 }

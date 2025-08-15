@@ -192,6 +192,8 @@ Middels het volgende commando:
 
 is het mogelijk dat de stappen die in de browser uitgevoerd worden als code op te slaan. Heel handing als men niet goed weet hoe men de afzonderlijke elementen dient te herkennen en er zeker van wil zijn dat deze ook altijd goed herkend worden.
 
+Een andere optie is om via de TEST EXPLORER ![title](old_scripts/testExplorer.png) de optie Record new te gebruiken. Middels deze optie worden alle stappen die men zet meteen in een bestand gezet voor verder gebruik.
+
 Meer informatie hierover is te vinden op: [https://playwright.dev/docs/codegen](https://playwright.dev/docs/codegen).
 
 ## [Bestanden]()

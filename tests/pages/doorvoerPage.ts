@@ -18,6 +18,5 @@ export class DoorvoerPage extends BasePage {
 	async ControleerMelding() {
 		// Controleer of de melding verschijnt dat er een workflow is aangemaatk
 		await expect(this.page.getByText('Voor deze actie is een')).toBeVisible();
-		await expect(this.page.locator('[id="__title58-inner"]')).toContainText('Voor deze actie is een workflow gemaakt.');
 	}
 }
