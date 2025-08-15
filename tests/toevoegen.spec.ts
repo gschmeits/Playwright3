@@ -28,7 +28,7 @@ try {
 	})
 
 	// Herhaal de stappen zo vaak als dat er records zijn in 'personsList' 
-	for (let teller = 17; teller < 18; teller++) {
+	for (let teller = 18; teller < 19; teller++) {
 		let naamTeller = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
 		let zoekNaam = `${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`
 		let medewerkersgroep = `${personsList[teller]['functiegegevens__medewerkersgroep']}`
