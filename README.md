@@ -297,6 +297,7 @@ Voor de uitvoeren van de scripts kan men twee commando’s uitvoeren om de comma
 ```
 node ExcelToJSON.js
 ```
+of ```tsx ExceltoJSON.ts```
 
 en vervolgens:
 
@@ -310,6 +311,7 @@ en als laatste, nadat het vorige scripts in zijn geheel is uitgevoerd:
 ```
 node JSONtoExcel.js
 ```
+of ```tsx JSONtoExcel.ts```
 
 Een andere optie is om het volgende in te typen op de command prompt:
 
@@ -317,7 +319,54 @@ Een andere optie is om het volgende in te typen op de command prompt:
 npm start
 ```
 
-Deze actie voert de vorige beschreven commando’s achter elkaar uit.
+Deze actie voert de vorige beschreven commando’s achter elkaar uit, waarbij de conversies van en naar Excel de .js bestanden gebruikt worden. 
 
 Nadat alle scripts zijn uitgevoerd wordt een Excel bestand gegenereerd waarin de resultaten per ingevoerde medewerker worden opgeslagen met de naam van het
 scriptbestand, de naam van het script, of het script het beoogde resultaat heeft behaald of niet, de starttijd en het aantal milliseconden dat het uitvoeren van het script heeft geduurd.
+
+## Opmerkingen
+### toevoegen.ts
+In dit bestand staat in regel 31: 
+
+```	for (let teller = 18; teller < 19; teller++) {```
+
+dat inhoudt dat de gegevens uit rij 20 genomen worden. 
+Wanneer men een andere medewerker toe wil voegen uit de lijst van het Excel bestand dan dient men daar het nummer van het ID, vermeld in kolom A in te voeren -1. Min 1 is omdat er vanf 0 geteld wordt. Tevens dient men 
+
+```teller < 19``` 
+
+uiteraard ook aan te passen. Die is dan weer de waarde van de teller + 1. De hele for next lus wordt dan 1 keer uitgevoerd.
+ 
+Wanneer men alle medewerkers uit het Excel workbook wil toevoegen dan kan men de code uit regel 31 als volgt aanpassen:
+
+```for (let teller = 0; teller < personsList.length(); teller++) {```
+
+### Opzet / structuur
+De scripts zijn zodanig opgezet dat er in het uit te voeren script (toevoegen.ts bijvoorbeeld) eigenlijk alleen nog maar daadwerkelijke stappen gezet hoeven te worden, als die de gebruiker zou doen indien het hele proces handmatig zou moeten gebeuren. Dit maakt het geheel in stuk eenvoudiger en ook duidelijker om te lezen.
+
+In de tests/Page directory staan per onderdeel (basisgegevens, persoonlijkegegevens, functiegegevens, logingegevens, doorvoer) staan verschillende bestanden die door het uit te voeren script aangeroepen kunnen worden. In deze bestanden staan per handeling de verschillende stappen.
+
+Bijkomende voordelen zijn o.a.:
+
+1. Stappen die bij elkaar horen staan bijelkaar
+2. Stappen die herhaaldelijk uitgevoerd dienen te worden, zoals bijvoorbeeld het vullen van een tekst veld, worden iedere keer op dezelfde manier uitgevoerd.
+3. Het maken van fouten wordt beperkt omdat het geheel van stappen reeds ergens staan en aangeroepen kan worden
+4. De gebruikte bestanden nemen minder ruimte in beslag
+
+
+### Uitvoer duur
+Het playwright.config.ts bestand is zodanig geconfigureerd dat er bij ieder uitvoer van het script een zogenaamde trace en een vidoe bestand aangemaakt wordt. Dat neem nogal wat tijd in beslag. Voordeel hiervan is dat men precies kan zien hoe het proces verlopen is.
+
+In het genoemde configuratie bestand staan deze waarden in regel 37 en 38:
+
+```video: 'on', ```
+
+```trace: 'on', ```
+
+Om het hele proces wat sneller te laten verlopen zouden deze waarden als volgt aangepast kunnen worden:
+
+```video: 'on-first-retry'```
+
+```trace: 'on-first-retry'```
+ 
+Hierbij worden de trace en video aangemaakt wanneer er iets mis gegaan is bij de uitvoer van het script.
