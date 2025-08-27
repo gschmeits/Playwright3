@@ -55,6 +55,12 @@ export default class BasePage {
         }
     }
 
+    async searchPersoonLast(searchObject: string, wachttijd: number = 1000) {
+        await this.page.waitForTimeout(wachttijd)
+        if (await this.page.locator('#search').getByText('Er zijn geen resultaten').isVisible() == false) {
+            await this.page.getByText(searchObject).last().click()
+        }
+    }
     async searchPersoon1(searchObject: string, teller: number, wachttijd: number = 1000) {
         await this.page.waitForTimeout(wachttijd)
         if (await this.page.locator('#search').getByText('Er zijn geen resultaten').isVisible() == false) {
@@ -324,6 +330,16 @@ export function datum(days: number = 0, months: number = 0, years: number = 0): 
     var dd = String(date.getDate()).padStart(2, '0');
     var mm = String(date.getMonth() + 1).padStart(2, '0');
     var yyyy = date.getFullYear()
+    var newDate = dd + mm + yyyy;
+    return newDate
+}
+
+export function eindDatum() : string {
+    const date = new Date()
+    var d = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    var dd = String(d.getDate()).padStart(2, '0');
+    var mm = String(d.getMonth() + 1).padStart(2, '0');
+    var yyyy = d.getFullYear()
     var newDate = dd + mm + yyyy;
     return newDate
 }

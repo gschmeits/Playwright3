@@ -11,7 +11,7 @@ try {
     // Acties voordat de gegevens toegevoegd worden
     test.beforeEach('test', async ({ page }) => {
         const loginPage = new LoginPage(page)
-        await loginPage.SuccessFactorsLogin("HRA")
+        await loginPage.SuccessFactorsLogin("OMB")
     });
 
     // Acties nadat de gegevens zijn ingevoerd
@@ -24,25 +24,49 @@ try {
         // Laad de gegevens van de login pagina
         const loginPage = new LoginPage(page)
 
-        // Wacht 2 seconden
-        await page.waitForTimeout(2000)
+        // Wacht 3 seconden
+        await page.waitForTimeout(3000)
 
         // Zoek alle knoppen op de huidige webpagina
         const buttons = await page.locator('button').evaluateAll((elements) =>
             elements.map((element) => element.getAttribute('title'))
         );
 
-        // Controleer of er bij knop 5 'U hebt o taakitems.' staat; zo niet ga dan verder
-        if (buttons[4] != 'U hebt 0 taakitems.') {
+        // Variabele om te bepalen welke knop er gedrukt dient te worden
+        let teller = 0
+        let aantalRijen = 0
+        // Loop door alle knoppen van de pagina 
+        for (let i = 0; i < buttons.length; i++) {
+            // Wijs de tekst van de knop toe aan variabele tekst
+            let tekst: string|null = buttons[i]
+            // Indien de variabele tekst niet null is, ga dan verder
+            if (tekst != null) {
+                // Splits de variabele text uit per spatie
+                let splitAll = tekst?.split(' ')
+                // Wanneer de tekst "U", "hebt" en "taakitems." gevonden worden,
+                // dan hebben we onze knop gevonden
+                if ((splitAll[0]) === "U" && splitAll[1] === "hebt" && splitAll[3] === "taakitems.") {
+                    // Variable teller krijgt de waarde van het nummer van de knop
+                    teller = i
+                    aantalRijen = Number(splitAll[2])
+                    // We hebben wat we hebben willen en hoeven niet meer verder te zoeken
+                    break
+                }
+            }
+        }
+
+        // Controleer of er bij knop teller 'U hebt 0 taakitems.' staat; zo niet ga dan verder
+        if (buttons[teller] != 'U hebt 0 taakitems.') {
 
             // Klik op de vijfde knop om de taakitems zichbaar te maken
-            await page.getByRole('button', { name: `${buttons[4]}` }).click();
-
+            await page.getByRole('button', { name: `${buttons[teller]}` }).click();
+            // Wacht 2 seconden
+            await page.waitForTimeout(3000)
             // Druk op 'Aanvragen goedkeuren'
             await page.getByText('Aanvragen goedkeuren').click();
 
             // Wacht 2 seconden
-            await page.waitForTimeout(2000)
+            await page.waitForTimeout(3000)
 
             // Wijs de tabel toe aan variabele: tabletest
             const tableTest = page.locator("table tbody");
@@ -51,7 +75,7 @@ try {
             const rows = tableTest.locator("tr");
 
             // Herhaal de volgende staan zo vaak als dat er rijen in de tabel zijn
-            for (let r = 0; r < await rows.count(); r++) {
+            for (let r = 0; r < aantalRijen; r++) {
 
                 // Wijs 1 rij toe aan variable: row
                 let row = rows.nth(r);
@@ -61,6 +85,7 @@ try {
 
                 // Klik op de knop in kolom 4 (Goedkeuren)
                 await rowData.nth(3).getByRole('button').click()
+                await page.waitForTimeout(5000)
             }
         }
         // anders laat de melding 'U heb geen taken openstaan!!!' op de console zien
