@@ -55,6 +55,13 @@ export default class BasePage {
         }
     }
 
+    async searchPersoon1(searchObject: string, teller: number, wachttijd: number = 1000) {
+        await this.page.waitForTimeout(wachttijd)
+        if (await this.page.locator('#search').getByText('Er zijn geen resultaten').isVisible() == false) {
+            console.log(`Gebruiker ${teller}. ${searchObject} gevonden!`)
+        }
+    }
+
     async comboboxSelectie(comboboxName: string, comboboxText: string, substringChars: number = 5, exact: boolean = false, wachttijd: number = 500) {
         if (comboboxText != '') {
             let fillText = comboboxText

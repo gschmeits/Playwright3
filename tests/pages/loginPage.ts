@@ -8,18 +8,28 @@ export class LoginPage extends BasePage {
 		super(page);
 	}
 
-	async SuccessFactorsLogin() {
+	async SuccessFactorsLogin(user: string = "PA") {
 		const enc = new Base64();
 		// -------------------------------------------------
 		// Inloggen en optie nieuwe medewerker zoeken
 		// -------------------------------------------------
 		// Ga naar url
 		await this.page.goto(process.env.URL!);
+		let username = ""
+		if (user === "PA") {
+			username = process.env.USERNAME_PA!
+		}
+		if (user === "HRA") {
+			username = process.env.USERNAME_HRA!
+		}
+		if (user === "OMB") {
+			username = process.env.USERNAME_OMB!
+		}
 
 		// Vul de gebruikersnaam in
 		await this.page
 			.getByRole("textbox", { name: "User Account" })
-			.fill(process.env.USERNAME_PA!);
+			.fill(username);
 		await this.page.getByRole("textbox", { name: "Password" }).click();
 
 		let password = enc.decode(process.env.PASSWORD_PA!);

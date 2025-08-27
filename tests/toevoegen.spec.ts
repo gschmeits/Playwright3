@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { LoginPage } from './pages/loginPage';
 import { BasisgegevensPage } from './pages/basisgegevensPage';
 import { titelNaam, datum } from "./pages/basePage";
@@ -28,7 +28,7 @@ try {
 	})
 
 	// Herhaal de stappen zo vaak als dat er records zijn in 'personsList' 
-	for (let teller = 18; teller < 19; teller++) {
+	for (let teller = 0; teller < 1; teller++) {
 		let naamTeller = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
 		let zoekNaam = `${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`
 		let medewerkersgroep = `${personsList[teller]['functiegegevens__medewerkersgroep']}`
@@ -143,12 +143,6 @@ try {
 				)
 			}
 
-			await functiegegevensPage.Doorgaan()
-
-			await functiegegevensPage.Beloning(
-				personsList[teller]['beloning__bedrag']
-			)
-
 			await functiegegevensPage.Betalingsgegevens(
 				personsList[teller]['betalingsinformatie__bankland'],
 				personsList[teller]['betalingsinformatie__IBAN'],
@@ -168,4 +162,4 @@ try {
 }
 catch (e) {
 	console.log(e)
-} 
+}
