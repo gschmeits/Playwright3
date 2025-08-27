@@ -32,12 +32,6 @@ try {
             elements.map((element) => element.getAttribute('title'))
         );
 
-        console.log(buttons.length)
-
-        for (let i = 0; i < buttons.length; i++) {
-            console.log(`Button nr. ${i}:   ${buttons[i]}`)
-        }
-
         // Controleer of er bij knop 5 'U hebt o taakitems.' staat; zo niet ga dan verder
         if (buttons[4] != 'U hebt 0 taakitems.') {
 
@@ -70,7 +64,7 @@ try {
             }
         }
         // anders laat de melding 'U heb geen taken openstaan!!!' op de console zien
-       else { console.log('Geen taken openstaan!!!') }
+        else { console.log('Geen taken openstaan!!!') }
     })
 }
 catch (e) {

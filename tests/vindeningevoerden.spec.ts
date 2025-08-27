@@ -12,7 +12,7 @@ try {
     test('vinden reeds ingevoerden', async ({ page }) => {
         const loginPage = new LoginPage(page)
         await loginPage.SuccessFactorsLogin()
-        // Herhaal de stappen zo vaak als dat er records zijn in 'personsList' 
+        // Herhaal de stappen zo vaak als dat er records zijn in 'personsList'
         for (let teller = 0; teller < personsList.length; teller++) {
             let naamTeller = titelNaam(teller, personsList[teller]['naamsgegevens__voornaam'], personsList[teller]['naamsgegevens__achternaam'], personsList[teller]['functiegegevens__medewerkersgroep'])
             let zoekNaam = `${personsList[teller]['naamsgegevens__voornaam']} ${personsList[teller]['naamsgegevens__achternaam']}`
