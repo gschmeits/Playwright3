@@ -73,7 +73,7 @@ export default class BasePage {
             let fillText = comboboxText
 
             var functieC = comboboxText
-            if (comboboxText.indexOf('(') > 0 && comboboxName === 'Formatieplaats') {
+            if (comboboxText.indexOf('(') > 0 && (comboboxName === 'Formatieplaats' || comboboxName === 'Reden beëindiging')) {
                 var functiegegevensA = comboboxText.split('(')
                 var functieB = functiegegevensA[1]
                 functieC = functieB.replace(')', '')
@@ -110,7 +110,13 @@ export default class BasePage {
     }
 
     async comboboxOptionSelection(comboboxName: string, comboboxText: string, substringChars: number = 5) {
-        await this.page.getByRole('combobox', { name: comboboxName }).fill(comboboxText.substring(0, substringChars));
+        if (substringChars === 0) {
+            await this.page.getByRole('combobox', { name: comboboxName }).fill(comboboxText);
+        }
+        else {
+            await this.page.getByRole('combobox', { name: comboboxName }).fill(comboboxText.substring(0, substringChars));
+        }
+        await this.page.waitForTimeout(2000)
         await this.page.getByRole('option', { name: comboboxText, exact: true }).click();
     }
 
@@ -334,7 +340,7 @@ export function datum(days: number = 0, months: number = 0, years: number = 0): 
     return newDate
 }
 
-export function eindDatum() : string {
+export function eindDatum(): string {
     const date = new Date()
     var d = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     var dd = String(d.getDate()).padStart(2, '0');

@@ -30,7 +30,7 @@ export class FunctiegegevensPage extends BasePage {
 	) {
 		// -------------------------------------------------
 		//	Invullen functie gegevens
-		// -------------------------------------------------		
+		// -------------------------------------------------
 		await this.comboboxSelectie('Formatieplaats', functiegegevens__formatieplaats)		// Selecteren formatieplaats
 		// Selecteren personeelssubgebied, alleen bij "functiegegevens__formatieplaats": "Beheerder ICT (50003393)"
 		if (functiegegevens__formatieplaats == "Beheerder ICT (50003393)") {
@@ -70,7 +70,7 @@ export class FunctiegegevensPage extends BasePage {
 	) {
 		// -------------------------------------------------
 		// Invullen werkrelaties
-		// -------------------------------------------------	
+		// -------------------------------------------------
 		await this.clickButton('Werkrelaties Toevoegen')	// Knop toevoegen
 		await this.comboboxOptionSelection('Type relatie', werkrelaties__type_relatie, 3)	// Selectie van het type relatie
 

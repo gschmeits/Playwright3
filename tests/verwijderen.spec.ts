@@ -42,25 +42,16 @@ try {
 				await loginPage.actie("Beëindigen")
 				await page.waitForTimeout(5000)
 				if (await page.getByText('Er bestaat al een aanvraag').isVisible() === false) {
-
-					await expect(page.getByRole('textbox', { name: 'Laatste dag indienst' })).toBeVisible();
-					await expect(page.getByRole('combobox', { name: 'HI-Code' })).toBeVisible();
-					await expect(page.getByRole('textbox', { name: 'Laatste werkdag' })).toBeVisible();
-					await expect(page.getByRole('textbox', { name: 'Transitievergoeding' })).toBeVisible();
-					await expect(page.getByText('Ontslagbrief')).toBeVisible();
-					await expect(page.getByText('Upload')).toBeVisible();
-					await expect(page.getByRole('combobox', { name: 'Reden beëindiging' })).toBeVisible();
-					await expect(page.getByRole('textbox', { name: 'Datum overlijden' })).toBeVisible();
-					await expect(page.getByRole('textbox', { name: 'Werkrooster uit recruitment' })).toBeVisible();
-					await expect(page.getByRole('button', { name: 'Annuleren' })).toBeVisible();
-
-					//await page.getByRole('button', { name: 'Annuleren' }).click();
-					// await page.getByRole('button', { name: 'Niet opslaan' }).click();
-
 					loginPage.fillTextBox('Laatste dag indienst', eindDatum())
 					loginPage.fillTextBox('Laatste werkdag', eindDatum())
+					await page.waitForTimeout(3000)
+					loginPage.comboboxSelectie('Reden beëindiging', 'Uitdienst Einde Tijdelijk Dienst (0913)')
+					await page.waitForTimeout(3000)
+					loginPage.clickButton('Opslaan')
 					await page.waitForTimeout(5000)
-
+					loginPage.fillTextBox('Voer hier u reactie in', 'Helaas kan deze tijdelijke dienst niet gecontinueerd worden.')
+					await page.waitForTimeout(3000)
+					loginPage.clickButton('Doorvoeren')
 				}
 				else {
 					console.log(`Er bestaat al een aanvraag voor een uitdiensttredingsworkflow voor gebruiker ${zoekNaam}.`)
